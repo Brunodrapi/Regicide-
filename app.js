@@ -91,23 +91,18 @@ function renderImmunity(){
   document.getElementById('imm-text').textContent=t('powers')[s.sym]||'';
 }
 
-/* ── Boss card (white card + overflowing character image) ── */
+/* ── Boss card (beige card + overflowing image + label on top) ── */
 function renderBossCard(){
   const b=boss(),s=suit(),bname=rankName(rankIdx);
   const wrap=document.getElementById('card-wrap');
   wrap.innerHTML='';
 
-  // White card with rank + suit label in top-left
+  // z-index 1 — beige card background
   const card=document.createElement('div');
   card.id='boss-card';
-  const lbl=document.createElement('div');
-  lbl.className='b-label';
-  lbl.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
-    `<span class="b-suit ${s.cls}">${s.sym}</span>`;
-  card.appendChild(lbl);
   wrap.appendChild(card);
 
-  // Character image — overflows card to bottom-right
+  // z-index 2 — character image, overflows card at bottom-right
   const img=document.createElement('img');
   img.className='b-img';
   img.alt=`${bname} ${s.sym}`;
@@ -122,6 +117,13 @@ function renderBossCard(){
   };
   img.src=`images/${b.sym}${s.code}.png`;
   wrap.appendChild(img);
+
+  // z-index 3 — rank+suit label, always visible above the image
+  const lbl=document.createElement('div');
+  lbl.className='b-label-top';
+  lbl.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
+    `<span class="b-suit ${s.cls}">${s.sym}</span>`;
+  wrap.appendChild(lbl);
 }
 
 /* ── Suit selector ── */
