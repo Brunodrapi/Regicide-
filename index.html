@@ -12,29 +12,42 @@ html,body{width:100%;height:100%;overflow:hidden}
 body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;position:relative;
   background:linear-gradient(180deg,#c2dbd0 0%,#9dc0ba 20%,#7aa5a0 40%,#5d8888 60%,#456070 80%,#344a5e 100%)}
 
-/* ── Background mountain layers ── */
 #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 #bg svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
 
-/* ── Killed row ── */
-#killed-row{height:17vh;min-height:52px;max-height:78px;display:flex;align-items:center;
-  justify-content:center;padding:4px 8px;gap:5px;background:rgba(0,0,0,0.28);
+/* ══ BOSS TRACK (top row) ══ */
+#boss-track{height:18vh;min-height:56px;max-height:84px;display:flex;align-items:center;
+  justify-content:center;padding:4px 8px;gap:5px;background:rgba(0,0,0,0.3);
   border-bottom:1px solid rgba(255,255,255,0.1);overflow-x:auto;overflow-y:hidden;
   flex-shrink:0;position:relative;z-index:1}
-#killed-row::-webkit-scrollbar{display:none}
-.k-card{position:relative;flex-shrink:0;width:33px;height:46px;background:#f3eed8;
-  border-radius:4px;box-shadow:1px 2px 6px rgba(0,0,0,0.5);display:flex;
-  flex-direction:column;align-items:center;justify-content:center;gap:1px}
-.k-rank{font-size:11px;font-weight:900;line-height:1}
-.k-suit{font-size:13px;line-height:1}
-.k-x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:900;color:#cc0000;line-height:1}
+#boss-track::-webkit-scrollbar{display:none}
 
-/* ── Main ── */
+/* Base track card */
+.tc{position:relative;flex-shrink:0;width:34px;height:48px;background:#f3eed8;
+  border-radius:4px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:1px;box-shadow:1px 2px 5px rgba(0,0,0,0.45)}
+.tc-rank{font-size:11px;font-weight:900;line-height:1}
+.tc-suit{font-size:13px;line-height:1}
+
+/* Killed card */
+.tc-dead .tc-x{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:28px;font-weight:900;color:#cc0000;line-height:1}
+
+/* Current boss card */
+.tc-current{border:2px solid rgba(255,220,100,0.9);
+  box-shadow:0 0 10px rgba(255,200,50,0.5),1px 2px 5px rgba(0,0,0,0.5)}
+
+/* Future cards – same rank */
+.tc-future-same{opacity:0.38;filter:grayscale(30%)}
+/* Future cards – other rank */
+.tc-future-other{opacity:0.18;filter:grayscale(60%)}
+/* Separator between rank groups */
+.tc-sep{width:1px;height:36px;background:rgba(255,255,255,0.2);flex-shrink:0}
+
+/* ══ MAIN AREA ══ */
 #main{flex:1;display:flex;align-items:stretch;padding:6px 8px;gap:6px;
   position:relative;z-index:1;min-height:0}
 
-/* ── Stat panels ── */
 .stat-panel{flex:1;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:5px}
 .stat-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);
@@ -46,46 +59,46 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
 .btn-plus{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,0.28);
   background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.72);font-size:22px;
-  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  line-height:1;font-family:'Cinzel',Georgia,serif}
+  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .btn-minus{width:68px;height:68px;border-radius:50%;border:2px solid rgba(200,60,60,0.42);
   background:rgba(130,12,12,0.22);color:rgba(255,185,185,0.9);font-size:40px;
-  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  line-height:1;font-family:'Cinzel',Georgia,serif}
+  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .btn-plus:active{background:rgba(255,255,255,0.18);transform:scale(.88)}
 .btn-minus:active{background:rgba(130,12,12,0.44);transform:scale(.88)}
 
-/* ── Boss panel ── */
+/* ══ BOSS PANEL ══ */
 #boss-panel{flex:1.1;display:flex;flex-direction:column;align-items:center;
-  justify-content:space-evenly;gap:3px}
-#power-bar{display:flex;align-items:center;gap:8px}
-.p-suit{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
-  font-size:21px;position:relative;border-radius:5px}
-.p-suit.blocked{opacity:0.25;filter:grayscale(70%)}
-.p-suit.blocked::after{content:'✕';position:absolute;inset:0;display:flex;
-  align-items:center;justify-content:center;font-size:25px;font-weight:900;
-  color:#e01111;line-height:1}
-#boss-card{width:82px;height:114px;background:#f3eed8;border-radius:8px;
+  justify-content:space-evenly;gap:2px}
+
+/* Immunity badge above card */
+#immunity{display:flex;flex-direction:column;align-items:center;gap:1px}
+.imm-label{font-size:8px;color:rgba(255,255,255,0.38);text-transform:uppercase;
+  letter-spacing:1.5px}
+.imm-wrap{position:relative;width:38px;height:38px;display:flex;
+  align-items:center;justify-content:center}
+.imm-sym{font-size:28px;line-height:1;opacity:0.35;filter:grayscale(50%)}
+.imm-x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
+
+#boss-card{width:82px;height:112px;background:#f3eed8;border-radius:8px;
   border:2px solid rgba(210,200,175,0.7);
   box-shadow:0 6px 22px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.6);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .b-rank{font-size:20px;font-weight:900;line-height:1}
-.b-suit{font-size:38px;line-height:1}
+.b-suit{font-size:36px;line-height:1}
 .b-name{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:.5px}
 
-/* ── Suit selector ── */
+/* Suit selector */
 #suit-selector{display:flex;gap:7px;align-items:center}
 .suit-btn{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.18);
   background:rgba(0,0,0,0.2);font-size:17px;cursor:pointer;display:flex;
   align-items:center;justify-content:center;line-height:1;transition:transform .12s}
 .suit-btn.active{border-color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.2);
   transform:scale(1.2);box-shadow:0 0 8px rgba(255,255,255,0.3)}
-.suit-btn.killed{opacity:0.28;cursor:not-allowed;border-color:rgba(180,0,0,0.4);
+.suit-btn.killed{opacity:0.25;cursor:not-allowed;border-color:rgba(180,0,0,0.35);
   position:relative}
-.suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;
-  color:#cc0000;font-weight:900}
+.suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;color:#cc0000;font-weight:900}
 
-/* ── Kill button ── */
 #kill-btn{width:48px;height:48px;border-radius:50%;
   background:radial-gradient(circle at 40% 35%,#5a1010,#2a0404);
   border:2px solid #7a2828;box-shadow:0 3px 12px rgba(0,0,0,0.55);
@@ -94,7 +107,7 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 .cr{color:#7a0e0e}.cb{color:#151010}
 
-/* ── Overlays ── */
+/* ══ OVERLAYS ══ */
 .overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0.86);
   backdrop-filter:blur(4px);align-items:center;justify-content:center;
   flex-direction:column;gap:14px;padding:20px}
@@ -117,46 +130,30 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 <div id="bg">
 <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-  <!-- sky handled by body gradient -->
-  <!-- layer 1: far alpine peaks -->
   <polygon fill="#82a8a2" points="0,600 0,360 60,300 110,330 170,260 230,300 290,230 360,195 420,235 480,185 540,215 600,180 660,220 720,190 790,225 850,200 910,230 960,205 1000,220 1000,600"/>
-  <!-- layer 2: mid-far mountains -->
   <polygon fill="#6a8e90" points="0,600 0,400 50,370 100,390 160,350 220,375 280,335 340,360 400,325 460,355 520,330 580,355 640,325 700,350 760,330 820,355 880,335 940,360 1000,340 1000,600"/>
-  <!-- layer 3: mid mountains + first pines -->
   <polygon fill="#577888" points="0,600 0,430 40,415 90,425 140,400 200,420 260,390 320,410 380,385 440,408 500,388 560,410 620,390 680,412 740,392 800,415 860,395 920,418 970,400 1000,415 1000,600"/>
-  <!-- pine spires layer 3 -->
-  <polygon fill="#455e72" points="145,390 141,410 149,410"/>
-  <polygon fill="#455e72" points="145,400 138,420 152,420"/>
-  <polygon fill="#455e72" points="320,400 316,420 324,420"/>
-  <polygon fill="#455e72" points="320,410 313,430 327,430"/>
-  <polygon fill="#455e72" points="560,382 556,402 564,402"/>
-  <polygon fill="#455e72" points="560,392 553,412 567,412"/>
-  <polygon fill="#455e72" points="800,408 796,428 804,428"/>
-  <polygon fill="#455e72" points="800,418 793,438 807,438"/>
-  <!-- layer 4: near mountains -->
   <polygon fill="#455e72" points="0,600 0,460 50,445 100,460 160,438 220,458 280,432 340,455 400,432 460,454 520,435 580,458 640,438 700,460 760,440 820,462 880,442 940,465 1000,448 1000,600"/>
-  <!-- layer 5: foreground hills with pines -->
   <polygon fill="#364a5e" points="0,600 0,500 40,488 80,500 130,480 180,498 240,472 300,492 360,475 420,495 480,478 540,498 600,480 660,500 720,482 780,502 840,482 900,505 960,485 1000,500 1000,600"/>
-  <!-- pine trees foreground -->
   <g fill="#2c3a4a">
     <polygon points="60,488 53,510 67,510"/><polygon points="60,498 50,520 70,520"/><rect x="58" y="510" width="4" height="18"/>
     <polygon points="150,475 143,497 157,497"/><polygon points="150,485 140,507 160,507"/><rect x="148" y="497" width="4" height="20"/>
     <polygon points="260,468 253,490 267,490"/><polygon points="260,478 250,500 270,500"/><rect x="258" y="490" width="4" height="20"/>
     <polygon points="360,472 352,494 368,494"/><polygon points="360,482 350,504 370,504"/><rect x="358" y="494" width="4" height="18"/>
-    <polygon points="450,475 443,497 457,497"/><polygon points="450,485 440,507 460,507"/><rect x="448" y="497" width="4" height="20"/>
-    <polygon points="550,476 543,498 557,498"/><polygon points="550,486 540,508 560,508"/><rect x="548" y="498" width="4" height="18"/>
-    <polygon points="650,479 643,501 657,501"/><polygon points="650,489 640,511 660,511"/><rect x="648" y="501" width="4" height="20"/>
-    <polygon points="760,480 753,502 767,502"/><polygon points="760,490 750,512 770,512"/><rect x="758" y="502" width="4" height="18"/>
-    <polygon points="870,478 863,500 877,500"/><polygon points="870,488 860,510 880,510"/><rect x="868" y="500" width="4" height="20"/>
+    <polygon points="480,475 473,497 487,497"/><polygon points="480,485 470,507 490,507"/><rect x="478" y="497" width="4" height="20"/>
+    <polygon points="600,476 593,498 607,498"/><polygon points="600,486 590,508 610,508"/><rect x="598" y="498" width="4" height="18"/>
+    <polygon points="720,479 713,501 727,501"/><polygon points="720,489 710,511 730,511"/><rect x="718" y="501" width="4" height="20"/>
+    <polygon points="840,480 833,502 847,502"/><polygon points="840,490 830,512 850,512"/><rect x="838" y="502" width="4" height="18"/>
     <polygon points="960,482 953,504 967,504"/><polygon points="960,492 950,514 970,514"/><rect x="958" y="504" width="4" height="18"/>
   </g>
-  <!-- layer 6: closest dark foreground -->
   <polygon fill="#2a3848" points="0,600 0,540 40,528 80,542 130,522 180,540 240,518 300,538 360,520 420,540 480,522 540,542 600,524 660,544 720,525 780,545 840,526 900,548 960,528 1000,545 1000,600"/>
 </svg>
 </div>
 
-<div id="killed-row"></div>
+<!-- ══ Boss track ══ -->
+<div id="boss-track"></div>
 
+<!-- ══ Main ══ -->
 <div id="main">
   <div class="stat-panel">
     <div class="stat-label"><span class="icon-hp">♥</span> PV</div>
@@ -170,7 +167,13 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   </div>
 
   <div id="boss-panel">
-    <div id="power-bar"></div>
+    <div id="immunity">
+      <div class="imm-label">Immunité</div>
+      <div class="imm-wrap">
+        <span class="imm-sym" id="imm-sym"></span>
+        <div class="imm-x">✕</div>
+      </div>
+    </div>
     <div id="boss-card"></div>
     <div id="suit-selector"></div>
     <button id="kill-btn" onclick="killBoss()">💀</button>
@@ -188,14 +191,12 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   </div>
 </div>
 
-<!-- rank-change overlay -->
 <div class="overlay" id="ov-next">
   <div class="ov-title">⚔ Rang vaincu ! ⚔</div>
   <div class="ov-sub" id="ov-sub"></div>
   <button class="btn-next" onclick="advanceBoss()">Au combat !</button>
 </div>
 
-<!-- win overlay -->
 <div class="overlay" id="ov-win">
   <div class="trophy">👑</div>
   <div class="ov-title" style="color:#ffd700">Victoire Totale !</div>
@@ -205,7 +206,7 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 <script>
 const SUITS=[{sym:'♣',cls:'cb'},{sym:'♦',cls:'cr'},{sym:'♥',cls:'cr'},{sym:'♠',cls:'cb'}];
-const RANKS=[{sym:'J',name:'Valets',hp:20,atk:10},{sym:'Q',name:'Dames',hp:30,atk:15},{sym:'K',name:'Rois',hp:40,atk:20}];
+const RANKS=[{sym:'J',name:'Valet',hp:20,atk:10},{sym:'Q',name:'Dame',hp:30,atk:15},{sym:'K',name:'Roi',hp:40,atk:20}];
 
 let rankIdx=0,suitIdx=0,killedSuits=new Set(),hp=20,atk=10,dead=[],locked=false;
 let holdTimer=null,holdInterval=null;
@@ -223,9 +224,96 @@ function suit(){return SUITS[suitIdx];}
 function setSuit(i){
   if(killedSuits.has(i))return;
   suitIdx=i;
-  renderBossCard();renderPowerBar();renderSuitSelector();
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();
 }
 
+/* ── Boss track ── */
+function renderBossTrack(){
+  const track=document.getElementById('boss-track');
+  track.innerHTML='';
+
+  let deadIdx=0;
+
+  for(let r=0;r<RANKS.length;r++){
+    // separator between rank groups (not before first)
+    if(r>0){const sep=document.createElement('div');sep.className='tc-sep';track.appendChild(sep);}
+
+    for(let s=0;s<4;s++){
+      const rk=RANKS[r];
+      // How many of this rank have been killed?
+      const killedOfRank=dead.filter(d=>d.rank===rk.sym);
+      const isCurrentRank=r===rankIdx;
+      const isPastRank=r<rankIdx;
+
+      let card;
+
+      if(isPastRank){
+        // All 4 killed – find matching dead entry
+        const d=killedOfRank[s];
+        card=makeCard(rk.sym,d?d.suit:null,'dead');
+      } else if(isCurrentRank){
+        if(killedSuits.size>s){
+          // This slot is a killed suit in current rank
+          // find which dead entry corresponds
+          const killed=[...killedSuits];
+          const si=killed[s];
+          const st=SUITS[si];
+          card=makeCard(rk.sym,st,'dead');
+        } else if(killedSuits.size===s){
+          // This is the current boss being fought
+          card=makeCard(rk.sym,suit(),'current');
+        } else {
+          // Future slot same rank – suit unknown
+          card=makeCard(rk.sym,null,'future-same');
+        }
+      } else {
+        // Future rank
+        card=makeCard(rk.sym,null,'future-other');
+      }
+
+      track.appendChild(card);
+    }
+  }
+}
+
+function makeCard(rankSym,suit,state){
+  const el=document.createElement('div');
+  el.className='tc tc-'+state;
+  if(state==='future-same'||state==='future-other'){
+    // hidden suit
+    el.innerHTML=`<span class="tc-rank" style="color:#666">${rankSym}</span>`+
+      `<span class="tc-suit" style="color:#aaa;font-size:11px">?</span>`;
+  } else {
+    const cls=suit?suit.cls:'cb';
+    const sym=suit?suit.sym:'?';
+    el.innerHTML=`<span class="tc-rank ${cls}">${rankSym}</span>`+
+      `<span class="tc-suit ${cls}">${sym}</span>`;
+    if(state==='dead'){
+      el.classList.add('tc-dead');
+      el.innerHTML+=`<div class="tc-x">✕</div>`;
+    }
+  }
+  return el;
+}
+
+/* ── Immunity ── */
+function renderImmunity(){
+  const s=suit();
+  const el=document.getElementById('imm-sym');
+  el.textContent=s.sym;
+  el.className='imm-sym '+s.cls;
+}
+
+/* ── Boss card ── */
+function renderBossCard(){
+  const b=boss(),s=suit();
+  document.getElementById('boss-card').innerHTML=
+    `<span class="b-rank ${s.cls}">${b.sym}</span>`+
+    `<span class="b-suit ${s.cls}">${s.sym}</span>`+
+    `<span class="b-name">${b.name}</span>`;
+}
+
+/* ── Suit selector ── */
 function renderSuitSelector(){
   const sel=document.getElementById('suit-selector');
   sel.innerHTML='';
@@ -240,38 +328,7 @@ function renderSuitSelector(){
   });
 }
 
-function renderBossCard(){
-  const b=boss(),s=suit();
-  document.getElementById('boss-card').innerHTML=
-    `<span class="b-rank ${s.cls}">${b.sym}</span>`+
-    `<span class="b-suit ${s.cls}">${s.sym}</span>`+
-    `<span class="b-name">${b.name.slice(0,-1)}</span>`;
-}
-
-function renderPowerBar(){
-  const bar=document.getElementById('power-bar');
-  bar.innerHTML='';
-  SUITS.forEach(s=>{
-    const el=document.createElement('div');
-    el.className='p-suit'+(s.sym===suit().sym?' blocked':'');
-    el.innerHTML=`<span class="${s.cls}">${s.sym}</span>`;
-    bar.appendChild(el);
-  });
-}
-
-function renderKilledRow(){
-  const row=document.getElementById('killed-row');
-  row.innerHTML='';
-  dead.forEach(d=>{
-    const el=document.createElement('div');
-    el.className='k-card';
-    el.innerHTML=`<span class="k-rank ${d.suit.cls}">${d.rank}</span>`+
-      `<span class="k-suit ${d.suit.cls}">${d.suit.sym}</span>`+
-      `<div class="k-x">✕</div>`;
-    row.appendChild(el);
-  });
-}
-
+/* ── Killed row (now inside track) ── */
 function updateNums(){
   document.getElementById('hp-val').textContent=hp;
   document.getElementById('atk-val').textContent=atk;
@@ -293,20 +350,21 @@ function killBoss(){
 function handleDeath(){
   dead.push({rank:boss().sym,suit:suit()});
   killedSuits.add(suitIdx);
-  renderKilledRow();
 
   if(killedSuits.size<4){
-    // next suit in same rank
     for(let i=0;i<4;i++){if(!killedSuits.has(i)){suitIdx=i;break;}}
     hp=boss().hp;atk=boss().atk;locked=false;
-    renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+    renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
   } else {
-    // all 4 of this rank done
     rankIdx++;killedSuits=new Set();suitIdx=0;
-    if(rankIdx>=RANKS.length){document.getElementById('ov-win').classList.add('show');return;}
+    if(rankIdx>=RANKS.length){
+      renderBossTrack();
+      document.getElementById('ov-win').classList.add('show');return;
+    }
+    renderBossTrack();
     const next=RANKS[rankIdx];
     document.getElementById('ov-sub').textContent=
-      `Prochain : ${next.name}  (PV ${next.hp} · ATK ${next.atk})`;
+      `Prochain rang : ${next.name}s  (PV ${next.hp} · ATK ${next.atk})`;
     document.getElementById('ov-next').classList.add('show');
   }
 }
@@ -314,17 +372,17 @@ function handleDeath(){
 function advanceBoss(){
   hp=boss().hp;atk=boss().atk;locked=false;
   document.getElementById('ov-next').classList.remove('show');
-  renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
 }
 
 function resetGame(){
   rankIdx=0;suitIdx=0;killedSuits=new Set();dead=[];locked=false;
   hp=RANKS[0].hp;atk=RANKS[0].atk;
   document.getElementById('ov-win').classList.remove('show');
-  renderKilledRow();renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
 }
 
-renderKilledRow();renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
 </script>
 </body>
 </html>
