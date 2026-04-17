@@ -85,10 +85,17 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 #boss-card{width:82px;height:112px;background:#f3eed8;border-radius:8px;
   border:2px solid rgba(210,200,175,0.7);
   box-shadow:0 6px 22px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.6);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  position:relative;overflow:hidden}
+.b-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px}
+.b-overlay{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;
+  background:rgba(243,238,216,0.18)}
 .b-rank{font-size:20px;font-weight:900;line-height:1}
 .b-suit{font-size:36px;line-height:1}
 .b-name{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:.5px}
+/* fallback (no image): show text normally */
+.b-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:100%}
 
 /* Suit selector */
 #suit-selector{display:flex;gap:7px;align-items:center}
@@ -214,7 +221,12 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 <script>
 
-const SUITS=[{sym:'♣',cls:'cb'},{sym:'♦',cls:'cr'},{sym:'♥',cls:'cr'},{sym:'♠',cls:'cb'}];
+const SUITS=[
+  {sym:'♣',cls:'cb',code:'C'},
+  {sym:'♦',cls:'cr',code:'D'},
+  {sym:'♥',cls:'cr',code:'H'},
+  {sym:'♠',cls:'cb',code:'S'},
+];
 const RANKS=[{sym:'J',name:'Valet',hp:20,atk:10},{sym:'Q',name:'Dame',hp:30,atk:15},{sym:'K',name:'Roi',hp:40,atk:20}];
 
 let rankIdx=0,suitIdx=0,killedSuits=new Set(),hp=20,atk=10,dead=[],locked=false;
@@ -323,10 +335,29 @@ function renderImmunity(){
 /* ── Boss card ── */
 function renderBossCard(){
   const b=boss(),s=suit();
-  document.getElementById('boss-card').innerHTML=
-    `<span class="b-rank ${s.cls}">${b.sym}</span>`+
-    `<span class="b-suit ${s.cls}">${s.sym}</span>`+
-    `<span class="b-name">${b.name}</span>`;
+  const imgSrc=`images/${b.sym}${s.code}.png`;
+  const card=document.getElementById('boss-card');
+  card.innerHTML='';
+  const img=document.createElement('img');
+  img.className='b-img';
+  img.alt=`${b.name} ${s.sym}`;
+  img.src=imgSrc;
+  img.onerror=function(){
+    this.remove();
+    const fb=document.createElement('div');
+    fb.className='b-fallback';
+    fb.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
+      `<span class="b-suit ${s.cls}">${s.sym}</span>`+
+      `<span class="b-name">${b.name}</span>`;
+    card.appendChild(fb);
+  };
+  card.appendChild(img);
+  // Corner labels over image
+  const ov=document.createElement('div');
+  ov.className='b-overlay';
+  ov.innerHTML=`<span class="b-rank ${s.cls}" style="text-shadow:0 0 4px #fff">${b.sym}</span>`+
+    `<span class="b-suit ${s.cls}" style="font-size:28px;opacity:.7">${s.sym}</span>`;
+  card.appendChild(ov);
 }
 
 /* ── Suit selector ── */
