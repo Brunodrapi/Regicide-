@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Regicide – Boss Tracker</title>
+  <style>
+    :root {
+      --bg1: #7a9f9f;
+      --bg2: #3d6a6a;
+      --bg3: #1e3d3d;
+      --bg4: #0d2020;
+      --red:  #6e1414;
+      --red2: #3a0808;
+      --card: #f3eed8;
+      --border: rgba(255,255,255,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg,
+          var(--bg1) 0%,
+          var(--bg2) 35%,
+          var(--bg3) 65%,
+          var(--bg4) 100%);
+      position: relative;
+    }
+
+    /* ── Mountain silhouettes ── */
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 55%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 260'%3E%3Cpolygon points='0,260 0,180 55,110 110,155 175,80 240,130 310,50 380,115 440,85 510,140 580,70 650,120 720,95 800,140 800,260' fill='%23162e2e'/%3E%3Cpolygon points='0,260 0,210 80,150 150,190 220,130 290,170 370,100 440,155 530,115 620,170 700,130 800,165 800,260' fill='%230d2020'/%3E%3C/svg%3E")
+        bottom / cover no-repeat;
+    }
+
+    /* ══════════════════════════════
+       TOP ROW – defeated bosses
+    ══════════════════════════════ */
+    #killed-row {
+      height: 17vh;
+      min-height: 54px;
+      max-height: 80px;
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      gap: 6px;
+      background: rgba(0,0,0,0.28);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      overflow-y: hidden;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    #killed-row::-webkit-scrollbar { display: none; }
+
+    .row-label {
+      font-size: 9px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      writing-mode: vertical-rl;
+      flex-shrink: 0;
+      padding-right: 2px;
+    }
+
+    .k-card {
+      position: relative;
+      flex-shrink: 0;
+      width: 34px;
+      height: 48px;
+      background: var(--card);
+      border-radius: 4px;
+      box-shadow: 1px 2px 5px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+    }
+    .k-rank { font-size: 11px; font-weight: 900; line-height: 1; }
+    .k-suit { font-size: 13px; line-height: 1; }
+    .k-x {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 900;
+      color: #cc0000;
+      text-shadow: 0 0 6px rgba(200,0,0,0.4);
+      line-height: 1;
+    }
+
+    /* ══════════════════════════════
+       MAIN AREA
+    ══════════════════════════════ */
+    #main {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      padding: 6px 8px;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+      min-height: 0;
+    }
+
+    /* ── Stat panels (HP / ATK) ── */
+    .stat-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: bold;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .stat-num {
+      font-size: clamp(40px, 8.5vw, 70px);
+      font-weight: 900;
+      color: #7a1a1a;
+      text-shadow: 2px 3px 0 #3a0505, 0 0 18px rgba(100,0,0,0.25);
+      line-height: 1;
+      min-width: 2ch;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-plus {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.75);
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .1s, background .1s;
+      line-height: 1;
+    }
+    .btn-plus:active { transform: scale(.9); background: rgba(255,255,255,0.18); }
+
+    .btn-minus {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      border: 2px solid rgba(210,70,70,0.45);
+      background: rgba(140,15,15,0.22);
+      color: rgba(255,190,190,0.9);
+      font-size: 38px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .1s, background .1s;
+      line-height: 1;
+    }
+    .btn-minus:active { transform: scale(.9); background: rgba(140,15,15,0.42); }
+
+    /* ── Boss center panel ── */
+    #boss-panel {
+      flex: 1.1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      gap: 4px;
+    }
+
+    /* Power bar */
+    #power-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .p-suit {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      position: relative;
+      border-radius: 5px;
+      transition: opacity .3s;
+    }
+
+    .p-suit.blocked {
+      opacity: 0.28;
+      filter: grayscale(60%);
+    }
+
+    .p-suit.blocked::after {
+      content: '✕';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 900;
+      color: #dd1111;
+      opacity: 1;
+      line-height: 1;
+    }
+
+    /* Boss card */
+    #boss-card {
+      width: 82px; height: 114px;
+      background: var(--card);
+      border-radius: 8px;
+      border: 2px solid rgba(210,200,175,0.7);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.55),
+                  inset 0 1px 0 rgba(255,255,255,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+    }
+    .b-rank { font-size: 20px; font-weight: 900; line-height: 1; }
+    .b-suit { font-size: 38px; line-height: 1; }
+    .b-name { font-size: 8px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* Kill button */
+    #kill-btn {
+      padding: 7px 16px;
+      background: linear-gradient(155deg, #7a1818 0%, #3e0606 100%);
+      color: rgba(255,215,215,0.92);
+      border: 1px solid #9a3030;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: Georgia, serif;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.45);
+      transition: transform .1s;
+    }
+    #kill-btn:active { transform: scale(.95); }
+
+    /* Colour helpers */
+    .cr { color: #7a0e0e; }
+    .cb { color: #151010; }
+
+    /* ══════════════════════════════
+       OVERLAYS
+    ══════════════════════════════ */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(0,0,0,0.86);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+    }
+    .overlay.show { display: flex; }
+
+    .ov-title {
+      font-size: clamp(20px, 5vw, 30px);
+      font-weight: 900;
+      color: #d4aa44;
+      text-shadow: 0 0 22px rgba(212,170,68,0.5);
+      text-align: center;
+    }
+    .ov-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      text-align: center;
+    }
+
+    .preview-card {
+      width: 68px; height: 96px;
+      background: var(--card);
+      border-radius: 7px;
+      border: 2px solid rgba(210,200,175,0.7);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .btn-next {
+      padding: 12px 32px;
+      background: linear-gradient(155deg, #1a5c2a 0%, #0c2e15 100%);
+      color: rgba(195,255,195,0.95);
+      border: 1px solid #3d8a4d;
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: transform .1s;
+    }
+    .btn-next:active { transform: scale(.96); }
+
+    .btn-restart {
+      padding: 12px 32px;
+      background: linear-gradient(155deg, #5a1818 0%, #2d0808 100%);
+      color: rgba(255,195,195,0.95);
+      border: 1px solid #8a3030;
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: transform .1s;
+    }
+    .btn-restart:active { transform: scale(.96); }
+
+    .trophy { font-size: 52px; line-height: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ── Defeated bosses row ── -->
+<div id="killed-row">
+  <span class="row-label">Vaincus</span>
+</div>
+
+<!-- ── Main game area ── -->
+<div id="main">
+
+  <!-- HP (left) -->
+  <div class="stat-panel">
+    <div class="stat-label">PV</div>
+    <button class="btn-plus"  onclick="changeHP(+1)">+</button>
+    <div class="stat-num" id="hp-val">20</div>
+    <button class="btn-minus" onclick="changeHP(-1)">−</button>
+  </div>
+
+  <!-- Boss (center) -->
+  <div id="boss-panel">
+    <div id="power-bar"></div>
+    <div id="boss-card"></div>
+    <button id="kill-btn" onclick="killBoss()">⚔ Tuer maintenant</button>
+  </div>
+
+  <!-- ATK (right) -->
+  <div class="stat-panel">
+    <div class="stat-label">ATK</div>
+    <button class="btn-plus"  onclick="changeATK(+1)">+</button>
+    <div class="stat-num" id="atk-val">10</div>
+    <button class="btn-minus" onclick="changeATK(-1)">−</button>
+  </div>
+
+</div>
+
+<!-- ── Next boss overlay ── -->
+<div class="overlay" id="ov-next">
+  <div class="ov-title">⚔ Boss Vaincu ! ⚔</div>
+  <div class="ov-sub">Prochain adversaire :</div>
+  <div class="preview-card" id="next-preview"></div>
+  <button class="btn-next" onclick="advanceBoss()">Au combat !</button>
+</div>
+
+<!-- ── All bosses defeated overlay ── -->
+<div class="overlay" id="ov-win">
+  <div class="trophy">👑</div>
+  <div class="ov-title" style="color:#ffd700">Victoire Totale !</div>
+  <div class="ov-sub">Tous les boss ont été vaincus !</div>
+  <button class="btn-restart" onclick="resetGame()">Recommencer</button>
+</div>
+
+<script>
+  /* ── Data ── */
+  const SUITS = [
+    { sym: '♣', cls: 'cb', name: 'Trèfle'  },
+    { sym: '♦', cls: 'cr', name: 'Carreau' },
+    { sym: '♥', cls: 'cr', name: 'Cœur'    },
+    { sym: '♠', cls: 'cb', name: 'Pique'   },
+  ];
+
+  const RANKS = [
+    { sym: 'J', name: 'Valet', hp: 20, atk: 10 },
+    { sym: 'Q', name: 'Dame',  hp: 30, atk: 15 },
+    { sym: 'K', name: 'Roi',   hp: 40, atk: 20 },
+  ];
+
+  const BOSSES = [];
+  for (const rank of RANKS)
+    for (const suit of SUITS)
+      BOSSES.push({ ...rank, suit });
+
+  /* ── State ── */
+  let idx       = 0;
+  let hp        = BOSSES[0].hp;
+  let atk       = BOSSES[0].atk;
+  let dead      = [];
+  let locked    = false;   // prevent double-trigger on death
+
+  /* ── Render helpers ── */
+  function renderKilledRow() {
+    const row   = document.getElementById('killed-row');
+    const label = row.querySelector('.row-label');
+    row.innerHTML = '';
+    row.appendChild(label);
+    for (const b of dead) {
+      const el = document.createElement('div');
+      el.className = 'k-card';
+      el.innerHTML =
+        `<span class="k-rank ${b.suit.cls}">${b.sym}</span>` +
+        `<span class="k-suit ${b.suit.cls}">${b.suit.sym}</span>` +
+        `<div class="k-x">✕</div>`;
+      row.appendChild(el);
+    }
+  }
+
+  function renderBossCard() {
+    const b = BOSSES[idx];
+    document.getElementById('boss-card').innerHTML =
+      `<span class="b-rank ${b.suit.cls}">${b.sym}</span>` +
+      `<span class="b-suit ${b.suit.cls}">${b.suit.sym}</span>` +
+      `<span class="b-name">${b.name}</span>`;
+  }
+
+  function renderPowerBar() {
+    const b   = BOSSES[idx];
+    const bar = document.getElementById('power-bar');
+    bar.innerHTML = '';
+    for (const s of SUITS) {
+      const el = document.createElement('div');
+      el.className = 'p-suit' + (s.sym === b.suit.sym ? ' blocked' : '');
+      el.innerHTML = `<span class="${s.cls}">${s.sym}</span>`;
+      bar.appendChild(el);
+    }
+  }
+
+  function updateNums() {
+    document.getElementById('hp-val').textContent  = hp;
+    document.getElementById('atk-val').textContent = atk;
+  }
+
+  /* ── Actions ── */
+  function changeHP(delta) {
+    if (locked) return;
+    hp = Math.max(0, hp + delta);
+    updateNums();
+    if (hp === 0) { locked = true; setTimeout(handleDeath, 260); }
+  }
+
+  function changeATK(delta) {
+    atk = Math.max(0, atk + delta);
+    updateNums();
+  }
+
+  function killBoss() {
+    if (locked) return;
+    locked = true;
+    hp = 0;
+    updateNums();
+    setTimeout(handleDeath, 260);
+  }
+
+  function handleDeath() {
+    dead.push(BOSSES[idx]);
+    renderKilledRow();
+
+    if (idx + 1 >= BOSSES.length) {
+      document.getElementById('ov-win').classList.add('show');
+      return;
+    }
+
+    const next = BOSSES[idx + 1];
+    document.getElementById('next-preview').innerHTML =
+      `<span class="b-rank ${next.suit.cls}" style="font-size:17px">${next.sym}</span>` +
+      `<span class="b-suit ${next.suit.cls}" style="font-size:28px">${next.suit.sym}</span>` +
+      `<span class="b-name">${next.name}</span>`;
+
+    document.getElementById('ov-next').classList.add('show');
+  }
+
+  function advanceBoss() {
+    idx++;
+    const b = BOSSES[idx];
+    hp  = b.hp;
+    atk = b.atk;
+    locked = false;
+    document.getElementById('ov-next').classList.remove('show');
+    renderBossCard();
+    renderPowerBar();
+    updateNums();
+  }
+
+  function resetGame() {
+    idx    = 0;
+    dead   = [];
+    locked = false;
+    const b = BOSSES[0];
+    hp  = b.hp;
+    atk = b.atk;
+    document.getElementById('ov-win').classList.remove('show');
+    renderKilledRow();
+    renderBossCard();
+    renderPowerBar();
+    updateNums();
+  }
+
+  /* ── Init ── */
+  renderKilledRow();
+  renderBossCard();
+  renderPowerBar();
+  updateNums();
+</script>
+</body>
+</html>
