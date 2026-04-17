@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Regicide</title>
 <style>
-@font-face{font-family:'VikingRunes';src:url('fonts/viking_middle_runes.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:block}
+@font-face{font-family:'VikingRunes';src:url('fonts/viking_middle_runes.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:block}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
 html,body{width:100%;height:100%;overflow:hidden}
 body{display:flex;flex-direction:column;font-family:'VikingRunes','Cinzel',Georgia,serif;position:relative;
@@ -56,7 +56,8 @@ body{display:flex;flex-direction:column;font-family:'VikingRunes','Cinzel',Georg
 .icon-atk{font-size:16px}
 .stat-num{font-size:clamp(42px,9vw,72px);font-weight:900;color:#7a1a1a;
   text-shadow:2px 3px 0 #3a0505,0 0 20px rgba(100,0,0,0.25);line-height:1;
-  min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+  min-width:2ch;text-align:center;font-variant-numeric:tabular-nums;
+  font-family:'VikingRunes',Georgia,serif}
 .btn-plus{width:46px;height:46px;border-radius:8px;border:2px solid rgba(255,255,255,0.28);
   background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.72);font-size:22px;
   font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
@@ -88,8 +89,10 @@ body{display:flex;flex-direction:column;font-family:'VikingRunes','Cinzel',Georg
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
   position:relative;overflow:hidden}
 .b-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px}
-.b-overlay{position:absolute;top:4px;left:5px;display:flex;flex-direction:column;
-  align-items:center;gap:0;line-height:1}
+/* bottom-right corner label (rank + suit, white bg, rotated like real card) */
+.b-corner{position:absolute;bottom:3px;right:4px;display:flex;flex-direction:column;
+  align-items:center;gap:0;line-height:1;background:white;border-radius:3px;
+  padding:1px 3px;transform:rotate(180deg)}
 .b-rank{font-size:20px;font-weight:900;line-height:1}
 .b-suit{font-size:36px;line-height:1}
 .b-name{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:.5px}
@@ -109,8 +112,8 @@ body{display:flex;flex-direction:column;font-family:'VikingRunes','Cinzel',Georg
 
 #card-zone{position:relative;display:inline-flex}
 #kill-btn{position:absolute;top:-10px;left:-10px;width:30px;height:30px;
-  border-radius:6px;background:radial-gradient(circle at 40% 35%,#5a1010,#2a0404);
-  border:2px solid #9a3030;box-shadow:0 2px 8px rgba(0,0,0,0.6);
+  border-radius:6px;background:white;
+  border:1px solid rgba(180,180,180,0.6);box-shadow:0 2px 6px rgba(0,0,0,0.35);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   z-index:2;padding:3px}
 #kill-btn img{width:100%;height:100%;object-fit:contain}
@@ -339,9 +342,9 @@ function renderBossCard(){
   const card=document.getElementById('boss-card');
   card.innerHTML='';
   const ov=document.createElement('div');
-  ov.className='b-overlay';
-  ov.innerHTML=`<span class="b-rank ${s.cls}" style="font-size:14px;font-weight:900;text-shadow:0 1px 3px rgba(255,255,255,0.9)">${b.sym}</span>`+
-    `<span class="${s.cls}" style="font-size:14px;line-height:1;text-shadow:0 1px 3px rgba(255,255,255,0.9)">${s.sym}</span>`;
+  ov.className='b-corner';
+  ov.innerHTML=`<span class="b-rank ${s.cls}" style="font-size:12px;font-weight:900">${b.sym}</span>`+
+    `<span class="${s.cls}" style="font-size:12px;line-height:1">${s.sym}</span>`;
   const img=document.createElement('img');
   img.className='b-img';
   img.alt=`${b.name} ${s.sym}`;
