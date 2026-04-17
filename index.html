@@ -6,9 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Regicide</title>
 <style>
-@font-face{font-family:'VikingRunes';src:url('fonts/viking_middle_runes.ttf') format('truetype');font-weight:normal;font-style:normal}
-</style>
-<style>
+@font-face{font-family:'VikingRunes';src:url('fonts/viking_middle_runes.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:block}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
 html,body{width:100%;height:100%;overflow:hidden}
 body{display:flex;flex-direction:column;font-family:'VikingRunes','Cinzel',Georgia,serif;position:relative;
@@ -340,25 +338,23 @@ function renderBossCard(){
   const imgSrc=`images/${b.sym}${s.code}.png`;
   const card=document.getElementById('boss-card');
   card.innerHTML='';
-  const img=document.createElement('img');
-  img.className='b-img';
-  img.alt=`${b.name} ${s.sym}`;
-  img.src=imgSrc;
-  img.onerror=function(){
-    this.remove();
-    const fb=document.createElement('div');
-    fb.className='b-fallback';
-    fb.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
-      `<span class="b-suit ${s.cls}">${s.sym}</span>`+
-      `<span class="b-name">${b.name}</span>`;
-    card.appendChild(fb);
-  };
-  card.appendChild(img);
-  // Corner labels over image
   const ov=document.createElement('div');
   ov.className='b-overlay';
   ov.innerHTML=`<span class="b-rank ${s.cls}" style="font-size:14px;font-weight:900;text-shadow:0 1px 3px rgba(255,255,255,0.9)">${b.sym}</span>`+
     `<span class="${s.cls}" style="font-size:14px;line-height:1;text-shadow:0 1px 3px rgba(255,255,255,0.9)">${s.sym}</span>`;
+  const img=document.createElement('img');
+  img.className='b-img';
+  img.alt=`${b.name} ${s.sym}`;
+  // onerror BEFORE src to guarantee it fires even on instant cache failure
+  img.onerror=function(){
+    this.remove();
+    ov.remove();
+    card.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
+      `<span class="b-suit ${s.cls}">${s.sym}</span>`+
+      `<span class="b-name">${b.name}</span>`;
+  };
+  img.src=imgSrc;
+  card.appendChild(img);
   card.appendChild(ov);
 }
 
@@ -421,8 +417,7 @@ function handleDeath(){
 function advanceBoss(){
   hp=boss().hp;atk=boss().atk;locked=false;
   document.getElementById('ov-next').classList.remove('show');
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
-}
+  }
 
 function resetGame(){
   rankIdx=0;suitIdx=0;killedSuits=new Set();dead=[];locked=false;
@@ -431,7 +426,15 @@ function resetGame(){
   renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
 }
 
-renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+// Load font via FontFace API so it's guaranteed available before first render
+(function(){
+  if(typeof FontFace==='undefined'){init();return;}
+  const ff=new FontFace('VikingRunes','url(fonts/viking_middle_runes.ttf)');
+  ff.load().then(f=>{document.fonts.add(f);}).catch(()=>{}).finally(()=>{init();});
+})();
+function init(){
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+}
 </script>
 </body>
 </html>
