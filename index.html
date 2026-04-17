@@ -111,11 +111,13 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 .cr{color:#7a0e0e}.cb{color:#151010}
 
-#fs-btn{position:fixed;bottom:8px;right:8px;z-index:50;width:32px;height:32px;
-  border-radius:6px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.25);
-  color:rgba(255,255,255,0.7);font-size:16px;cursor:pointer;display:flex;
-  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-#fs-btn:active{background:rgba(0,0,0,0.55)}
+#fs-btn{position:fixed;bottom:max(16px,env(safe-area-inset-bottom,16px));
+  left:50%;transform:translateX(-50%);z-index:50;
+  width:52px;height:44px;border-radius:8px;
+  background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.3);
+  color:rgba(255,255,255,0.85);font-size:20px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#fs-btn:active{background:rgba(0,0,0,0.7);transform:translateX(-50%) scale(.94)}
 
 /* ══ OVERLAYS ══ */
 .overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0.86);
@@ -223,18 +225,24 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 <script>
 function toggleFS(){
+  const el=document.documentElement;
   const btn=document.getElementById('fs-btn');
-  if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen().catch(()=>{});
-    btn.textContent='✕';
+  const inFS=document.fullscreenElement||document.webkitFullscreenElement;
+  if(!inFS){
+    const req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
+    if(req) req.call(el).catch(()=>{});
+    if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
   } else {
-    document.exitFullscreen();
-    btn.textContent='⛶';
+    const ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;
+    if(ex) ex.call(document);
   }
 }
-document.addEventListener('fullscreenchange',()=>{
-  document.getElementById('fs-btn').textContent=document.fullscreenElement?'✕':'⛶';
-});
+function updateFSBtn(){
+  const inFS=document.fullscreenElement||document.webkitFullscreenElement;
+  document.getElementById('fs-btn').textContent=inFS?'✕':'⛶';
+}
+document.addEventListener('fullscreenchange',updateFSBtn);
+document.addEventListener('webkitfullscreenchange',updateFSBtn);
 
 const SUITS=[{sym:'♣',cls:'cb'},{sym:'♦',cls:'cr'},{sym:'♥',cls:'cr'},{sym:'♠',cls:'cb'}];
 const RANKS=[{sym:'J',name:'Valet',hp:20,atk:10},{sym:'Q',name:'Dame',hp:30,atk:15},{sym:'K',name:'Roi',hp:40,atk:20}];
