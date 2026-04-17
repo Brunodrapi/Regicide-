@@ -57,10 +57,10 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 .stat-num{font-size:clamp(42px,9vw,72px);font-weight:900;color:#7a1a1a;
   text-shadow:2px 3px 0 #3a0505,0 0 20px rgba(100,0,0,0.25);line-height:1;
   min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
-.btn-plus{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,0.28);
+.btn-plus{width:46px;height:46px;border-radius:8px;border:2px solid rgba(255,255,255,0.28);
   background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.72);font-size:22px;
   font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.btn-minus{width:68px;height:68px;border-radius:50%;border:2px solid rgba(200,60,60,0.42);
+.btn-minus{width:68px;height:68px;border-radius:8px;border:2px solid rgba(200,60,60,0.42);
   background:rgba(130,12,12,0.22);color:rgba(255,185,185,0.9);font-size:40px;
   font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .btn-plus:active{background:rgba(255,255,255,0.18);transform:scale(.88)}
@@ -71,14 +71,16 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   justify-content:space-evenly;gap:2px}
 
 /* Immunity badge above card */
-#immunity{display:flex;flex-direction:column;align-items:center;gap:1px}
-.imm-label{font-size:8px;color:rgba(255,255,255,0.38);text-transform:uppercase;
-  letter-spacing:1.5px}
-.imm-wrap{position:relative;width:38px;height:38px;display:flex;
-  align-items:center;justify-content:center}
-.imm-sym{font-size:28px;line-height:1;opacity:0.35;filter:grayscale(50%)}
+#immunity{display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:rgba(0,0,0,0.25);border-radius:6px;padding:4px 8px}
+.imm-row{display:flex;align-items:center;gap:5px}
+.imm-wrap{position:relative;width:30px;height:30px;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0}
+.imm-sym{font-size:22px;line-height:1;opacity:0.35;filter:grayscale(50%)}
 .imm-x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:30px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
+  font-size:24px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
+.imm-text{font-size:9px;color:rgba(255,255,255,0.75);letter-spacing:.5px;
+  text-align:center;line-height:1.3;max-width:110px}
 
 #boss-card{width:82px;height:112px;background:#f3eed8;border-radius:8px;
   border:2px solid rgba(210,200,175,0.7);
@@ -90,7 +92,7 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 /* Suit selector */
 #suit-selector{display:flex;gap:7px;align-items:center}
-.suit-btn{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.18);
+.suit-btn{width:32px;height:32px;border-radius:7px;border:2px solid rgba(255,255,255,0.18);
   background:rgba(0,0,0,0.2);font-size:17px;cursor:pointer;display:flex;
   align-items:center;justify-content:center;line-height:1;transition:transform .12s}
 .suit-btn.active{border-color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.2);
@@ -99,11 +101,12 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   position:relative}
 .suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;color:#cc0000;font-weight:900}
 
-#kill-btn{width:48px;height:48px;border-radius:50%;
+#kill-btn{width:48px;height:34px;border-radius:0 0 8px 8px;
   background:radial-gradient(circle at 40% 35%,#5a1010,#2a0404);
-  border:2px solid #7a2828;box-shadow:0 3px 12px rgba(0,0,0,0.55);
-  font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-#kill-btn:active{transform:scale(.92)}
+  border:2px solid #7a2828;border-top:none;box-shadow:0 4px 12px rgba(0,0,0,0.55);
+  font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  margin-top:-2px}
+#kill-btn:active{transform:scale(.95)}
 
 .cr{color:#7a0e0e}.cb{color:#151010}
 
@@ -168,15 +171,17 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
   <div id="boss-panel">
     <div id="immunity">
-      <div class="imm-label">Immunité</div>
-      <div class="imm-wrap">
-        <span class="imm-sym" id="imm-sym"></span>
-        <div class="imm-x">✕</div>
+      <div class="imm-row">
+        <div class="imm-wrap">
+          <span class="imm-sym" id="imm-sym"></span>
+          <div class="imm-x">✕</div>
+        </div>
+        <div class="imm-text" id="imm-text"></div>
       </div>
     </div>
     <div id="boss-card"></div>
-    <div id="suit-selector"></div>
     <button id="kill-btn" onclick="killBoss()">💀</button>
+    <div id="suit-selector"></div>
   </div>
 
   <div class="stat-panel">
@@ -297,11 +302,18 @@ function makeCard(rankSym,suit,state){
 }
 
 /* ── Immunity ── */
+const SUIT_POWERS={
+  '♣':'Trèfle · Immunité aux dégâts doublés',
+  '♦':'Carreau · Immunité à la pioche',
+  '♥':'Cœur · Immunité à la guérison',
+  '♠':'Pique · Immunité au bouclier',
+};
 function renderImmunity(){
   const s=suit();
-  const el=document.getElementById('imm-sym');
-  el.textContent=s.sym;
-  el.className='imm-sym '+s.cls;
+  const sym=document.getElementById('imm-sym');
+  sym.textContent=s.sym;
+  sym.className='imm-sym '+s.cls;
+  document.getElementById('imm-text').textContent=SUIT_POWERS[s.sym]||'';
 }
 
 /* ── Boss card ── */
