@@ -101,12 +101,13 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   position:relative}
 .suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;color:#cc0000;font-weight:900}
 
-#kill-btn{width:48px;height:34px;border-radius:0 0 8px 8px;
-  background:radial-gradient(circle at 40% 35%,#5a1010,#2a0404);
-  border:2px solid #7a2828;border-top:none;box-shadow:0 4px 12px rgba(0,0,0,0.55);
-  font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  margin-top:-2px}
-#kill-btn:active{transform:scale(.95)}
+#card-zone{position:relative;display:inline-flex}
+#kill-btn{position:absolute;top:-10px;left:-10px;width:30px;height:30px;
+  border-radius:6px;background:radial-gradient(circle at 40% 35%,#5a1010,#2a0404);
+  border:2px solid #9a3030;box-shadow:0 2px 8px rgba(0,0,0,0.6);
+  font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  z-index:2;line-height:1}
+#kill-btn:active{transform:scale(.88)}
 
 .cr{color:#7a0e0e}.cb{color:#151010}
 
@@ -179,8 +180,10 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
         <div class="imm-text" id="imm-text"></div>
       </div>
     </div>
-    <div id="boss-card"></div>
-    <button id="kill-btn" onclick="killBoss()">💀</button>
+    <div id="card-zone">
+      <button id="kill-btn" onclick="killBoss()">💀</button>
+      <div id="boss-card"></div>
+    </div>
     <div id="suit-selector"></div>
   </div>
 
