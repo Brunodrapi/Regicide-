@@ -80,53 +80,7 @@ function suit(){return SUITS[suitIdx];}
 function setSuit(i){
   if(killedSuits.has(i))return;
   suitIdx=i;
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();
-}
-
-/* ── Boss track ── */
-function renderBossTrack(){
-  const track=document.getElementById('boss-track');
-  track.innerHTML='';
-  for(let r=0;r<RANKS.length;r++){
-    if(r>0){const sep=document.createElement('div');sep.className='tc-sep';track.appendChild(sep);}
-    for(let s=0;s<4;s++){
-      const rk=RANKS[r];
-      const killedOfRank=dead.filter(d=>d.rank===rk.sym);
-      const isCurrentRank=r===rankIdx,isPastRank=r<rankIdx;
-      let card;
-      if(isPastRank){
-        const d=killedOfRank[s];
-        card=makeCard(rk.sym,d?d.suit:null,'dead');
-      } else if(isCurrentRank){
-        if(killedSuits.size>s){
-          const si=[...killedSuits][s];
-          card=makeCard(rk.sym,SUITS[si],'dead');
-        } else if(killedSuits.size===s){
-          card=makeCard(rk.sym,suit(),'current');
-        } else {
-          card=makeCard(rk.sym,null,'future-same');
-        }
-      } else {
-        card=makeCard(rk.sym,null,'future-other');
-      }
-      track.appendChild(card);
-    }
-  }
-}
-
-function makeCard(rankSym,s,state){
-  const el=document.createElement('div');
-  el.className='tc tc-'+state;
-  if(state==='future-same'||state==='future-other'){
-    el.innerHTML=`<span class="tc-rank" style="color:#666">${rankSym}</span>`+
-      `<span class="tc-suit" style="color:#aaa;font-size:11px">?</span>`;
-  } else {
-    const cls=s?s.cls:'cb',sym=s?s.sym:'?';
-    el.innerHTML=`<span class="tc-rank ${cls}">${rankSym}</span>`+
-      `<span class="tc-suit ${cls}">${sym}</span>`;
-    if(state==='dead'){el.classList.add('tc-dead');el.innerHTML+=`<div class="tc-x">✕</div>`;}
-  }
-  return el;
+  renderBossCard();renderImmunity();renderSuitSelector();
 }
 
 /* ── Immunity ── */
@@ -137,24 +91,37 @@ function renderImmunity(){
   document.getElementById('imm-text').textContent=t('powers')[s.sym]||'';
 }
 
-/* ── Boss card ── */
+/* ── Boss card (white card + overflowing character image) ── */
 function renderBossCard(){
   const b=boss(),s=suit(),bname=rankName(rankIdx);
-  const card=document.getElementById('boss-card');
-  card.innerHTML='';
-  const badge=document.createElement('div');
-  badge.className='b-corner';badge.style.border='none';
-  badge.innerHTML=`<span style="color:${s.color};font-size:15px;line-height:1">${s.sym}</span>`;
+  const wrap=document.getElementById('card-wrap');
+  wrap.innerHTML='';
+
+  // White card with rank + suit label in top-left
+  const card=document.createElement('div');
+  card.id='boss-card';
+  const lbl=document.createElement('div');
+  lbl.className='b-label';
+  lbl.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
+    `<span class="b-suit ${s.cls}">${s.sym}</span>`;
+  card.appendChild(lbl);
+  wrap.appendChild(card);
+
+  // Character image — overflows card to bottom-right
   const img=document.createElement('img');
-  img.className='b-img';img.alt=`${bname} ${s.sym}`;
+  img.className='b-img';
+  img.alt=`${bname} ${s.sym}`;
   img.onerror=function(){
     this.remove();
-    card.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
-      `<span class="b-suit ${s.cls}">${s.sym}</span>`+
+    const fb=document.createElement('div');
+    fb.className='b-fallback';
+    fb.innerHTML=`<span class="b-rank ${s.cls}" style="font-size:22px">${b.sym}</span>`+
+      `<span class="b-suit ${s.cls}" style="font-size:26px">${s.sym}</span>`+
       `<span class="b-name">${bname}</span>`;
+    card.appendChild(fb);
   };
   img.src=`images/${b.sym}${s.code}.png`;
-  card.appendChild(img);card.appendChild(badge);
+  wrap.appendChild(img);
 }
 
 /* ── Suit selector ── */
@@ -198,10 +165,9 @@ function handleDeath(){
   if(killedSuits.size<4){
     for(let i=0;i<4;i++){if(!killedSuits.has(i)){suitIdx=i;break;}}
     hp=boss().hp;atk=boss().atk;locked=false;
-    renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+    renderBossCard();renderImmunity();renderSuitSelector();updateNums();
   } else {
     rankIdx++;killedSuits=new Set();suitIdx=0;
-    renderBossTrack();
     if(rankIdx>=RANKS.length){
       document.getElementById('ov-win').classList.add('show');return;
     }
@@ -215,14 +181,14 @@ function handleDeath(){
 function advanceBoss(){
   hp=boss().hp;atk=boss().atk;locked=false;
   document.getElementById('ov-next').classList.remove('show');
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+  renderBossCard();renderImmunity();renderSuitSelector();updateNums();
 }
 
 function resetGame(){
   rankIdx=0;suitIdx=0;killedSuits=new Set();dead=[];locked=false;
   hp=RANKS[0].hp;atk=RANKS[0].atk;
   document.getElementById('ov-win').classList.remove('show');
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+  renderBossCard();renderImmunity();renderSuitSelector();updateNums();
 }
 
 /* ── Boot ── */
@@ -234,5 +200,5 @@ function resetGame(){
 
 function init(){
   updateLangUI();
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+  renderBossCard();renderImmunity();renderSuitSelector();updateNums();
 }

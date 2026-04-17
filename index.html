@@ -24,94 +24,84 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 .lang-btn.active{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.95);
   border-color:rgba(255,255,255,0.5)}
 
-/* ══ BOSS TRACK ══ */
-#boss-track{height:18vh;min-height:56px;max-height:84px;display:flex;align-items:center;
-  justify-content:center;padding:4px 8px;gap:5px;background:rgba(0,0,0,0.3);
-  border-bottom:1px solid rgba(255,255,255,0.1);overflow-x:auto;overflow-y:hidden;
-  flex-shrink:0;position:relative;z-index:1}
-#boss-track::-webkit-scrollbar{display:none}
+/* ══ MAIN ══ */
+#main{flex:1;display:flex;align-items:stretch;position:relative;z-index:1;
+  min-height:0;overflow:visible}
 
-.tc{position:relative;flex-shrink:0;width:34px;height:48px;background:white;color-scheme:light;
-  border-radius:4px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:1px;box-shadow:1px 2px 5px rgba(0,0,0,0.45)}
-.tc-rank{font-size:11px;font-weight:900;line-height:1}
-.tc-suit{font-size:13px;line-height:1}
-.tc-dead .tc-x{position:absolute;inset:0;display:flex;align-items:center;
-  justify-content:center;font-size:28px;font-weight:900;color:#cc0000;line-height:1}
-.tc-current{border:2px solid rgba(255,220,100,0.9);
-  box-shadow:0 0 10px rgba(255,200,50,0.5),1px 2px 5px rgba(0,0,0,0.5)}
-.tc-future-same{opacity:0.38;filter:grayscale(30%)}
-.tc-future-other{opacity:0.18;filter:grayscale(60%)}
-.tc-sep{width:1px;height:36px;background:rgba(255,255,255,0.2);flex-shrink:0}
-
-/* ══ MAIN AREA ══ */
-#main{flex:1;display:flex;align-items:stretch;padding:6px 4px;gap:4px;
-  position:relative;z-index:1;min-height:0;
-  justify-content:center;max-width:520px;margin:0 auto;width:100%}
-
-.stat-panel{flex:0 0 90px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:5px}
-.stat-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);
-  text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:4px}
-.icon-hp{color:#aa2020;font-size:14px}
-.icon-atk{font-size:16px}
-.stat-num{font-size:clamp(42px,9vw,72px);font-weight:900;color:#7a1a1a;
-  text-shadow:2px 3px 0 #3a0505,0 0 20px rgba(100,0,0,0.25);line-height:1;
-  min-width:2ch;text-align:center;font-variant-numeric:tabular-nums;
+/* ── Stat panels ── */
+.stat-panel{flex:1.3;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:0;overflow:visible}
+.stat-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.38);
+  text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.icon-hp{color:#aa2020}
+.btn-chg{font-size:clamp(30px,7vw,52px);font-weight:900;
+  color:rgba(255,255,255,0.55);background:none;border:none;cursor:pointer;
+  line-height:1;padding:0 20px;font-family:Georgia,serif}
+.btn-chg:active{color:rgba(255,255,255,0.95);transform:scale(1.1)}
+.stat-num{font-size:clamp(68px,15vw,112px);font-weight:900;color:#7a1a1a;
+  text-shadow:3px 4px 0 #3a0505,0 0 30px rgba(100,0,0,0.3);
+  line-height:1;min-width:1.8ch;text-align:center;font-variant-numeric:tabular-nums;
   font-family:'VikingRunes',Georgia,serif!important}
-.btn-plus{width:46px;height:46px;border-radius:8px;border:2px solid rgba(255,255,255,0.28);
-  background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.72);font-size:22px;
-  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.btn-minus{width:68px;height:68px;border-radius:8px;border:2px solid rgba(200,60,60,0.42);
-  background:rgba(130,12,12,0.22);color:rgba(255,185,185,0.9);font-size:40px;
-  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.btn-plus:active{background:rgba(255,255,255,0.18);transform:scale(.88)}
-.btn-minus:active{background:rgba(130,12,12,0.44);transform:scale(.88)}
 
-/* ══ BOSS PANEL ══ */
+/* ── Boss panel ── */
 #boss-panel{flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:space-evenly;gap:2px}
+  justify-content:space-evenly;padding:4px 0;overflow:visible}
 
-#immunity{display:flex;flex-direction:column;align-items:center;gap:2px;
-  background:rgba(0,0,0,0.25);border-radius:6px;padding:4px 8px}
-.imm-row{display:flex;align-items:center;gap:5px}
-.imm-wrap{position:relative;width:30px;height:30px;display:flex;
+/* Immunity (single row) */
+#immunity{display:flex;align-items:center;gap:6px;
+  background:rgba(0,0,0,0.25);border-radius:6px;padding:3px 8px}
+.imm-wrap{position:relative;width:24px;height:24px;display:flex;
   align-items:center;justify-content:center;flex-shrink:0}
-.imm-sym{font-size:22px;line-height:1;opacity:0.35;filter:grayscale(50%)}
+.imm-sym{font-size:19px;line-height:1;opacity:0.35;filter:grayscale(50%)}
 .imm-x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:24px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
-.imm-text{font-size:9px;color:rgba(255,255,255,0.75);letter-spacing:.5px;
-  text-align:center;line-height:1.3;max-width:110px}
+  font-size:20px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
+.imm-text{font-size:9px;color:rgba(255,255,255,0.75);letter-spacing:.4px;
+  line-height:1.3;max-width:130px}
 
-#boss-card{width:82px;height:112px;background:white;border-radius:8px;
+/* Card zone */
+#card-zone{display:flex;align-items:flex-start;gap:8px;overflow:visible}
+
+/* White card + overflowing image */
+#card-wrap{position:relative;width:84px;height:118px;overflow:visible;flex-shrink:0}
+
+#boss-card{position:absolute;top:0;left:0;width:84px;height:118px;
+  background:white;border-radius:8px;color-scheme:light;
   border:2px solid rgba(210,200,175,0.7);
   box-shadow:0 6px 22px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.6);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  position:relative;overflow:hidden;color-scheme:light}
-.b-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px}
-.b-corner{position:absolute;bottom:5px;right:5px;width:22px;height:22px;
-  border-radius:5px;background:white;display:flex;align-items:center;
-  justify-content:center;font-size:15px;line-height:1;box-shadow:none}
-.b-rank{font-size:20px;font-weight:900;line-height:1}
-.b-suit{font-size:36px;line-height:1}
-.b-name{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:.5px}
+  z-index:1;padding:5px;display:flex;flex-direction:column;align-items:flex-start}
 
-#suit-selector{display:flex;gap:7px;align-items:center}
-.suit-btn{width:32px;height:32px;border-radius:7px;border:2px solid rgba(255,255,255,0.18);
-  background:rgba(0,0,0,0.2);font-size:17px;cursor:pointer;display:flex;
-  align-items:center;justify-content:center;line-height:1;transition:transform .12s}
-.suit-btn.active{border-color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.2);
-  transform:scale(1.2);box-shadow:0 0 8px rgba(255,255,255,0.3)}
-.suit-btn.killed{opacity:0.25;cursor:not-allowed;border-color:rgba(180,0,0,0.35);position:relative}
-.suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;color:#cc0000;font-weight:900}
+.b-label{display:flex;flex-direction:column;align-items:center;line-height:1.1;gap:1px}
+.b-rank{font-size:17px;font-weight:900;line-height:1}
+.b-suit{font-size:18px;line-height:1}
+.b-fallback{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;width:100%;height:100%}
+.b-name{font-size:7px;color:#888;text-transform:uppercase;letter-spacing:.5px}
 
-#card-zone{display:flex;flex-direction:row;align-items:center;gap:4px}
-#card-side{display:flex;align-items:center;justify-content:center}
+/* Character image overflows card to the right and bottom */
+.b-img{position:absolute;top:8px;left:2px;
+  width:120px;height:150px;
+  object-fit:contain;object-position:top left;
+  z-index:2;pointer-events:none}
+
+/* Kill button (skull) */
 #kill-btn{width:30px;height:30px;border-radius:6px;background:white;
   border:1px solid rgba(180,180,180,0.5);box-shadow:0 2px 6px rgba(0,0,0,0.3);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;padding:3px;flex-shrink:0}
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  padding:3px;flex-shrink:0}
 #kill-btn img{width:100%;height:100%;object-fit:contain}
 #kill-btn:active{transform:scale(.88)}
+
+/* Suit selector — large plain symbols */
+#suit-selector{display:flex;gap:10px;align-items:center}
+.suit-btn{width:46px;height:46px;background:none;border:none;font-size:30px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;opacity:0.72;transition:transform .12s,opacity .12s;position:relative;
+  filter:drop-shadow(0 0 1px rgba(255,255,255,0.9)) drop-shadow(0 0 2px rgba(255,255,255,0.6))}
+.suit-btn.active{opacity:1;transform:scale(1.28);
+  filter:drop-shadow(0 0 2px rgba(255,255,255,1)) drop-shadow(0 0 6px rgba(255,255,255,0.7))}
+.suit-btn.killed{opacity:0.18;cursor:not-allowed;filter:none}
+.suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;
+  color:#cc0000;font-weight:900}
 
 .cr{color:#7a0e0e}.cb{color:#151010}
 
@@ -168,51 +158,51 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   <button class="lang-btn" data-lang="cn" onclick="setLang('cn')">CN</button>
 </div>
 
-<!-- ══ Boss track ══ -->
-<div id="boss-track"></div>
-
 <!-- ══ Main ══ -->
 <div id="main">
+
+  <!-- HP -->
   <div class="stat-panel">
-    <div class="stat-label"><span class="icon-hp">♥</span> <span id="lbl-hp">PV</span></div>
-    <button class="btn-plus"
+    <div class="stat-lbl"><span class="icon-hp">♥</span> <span id="lbl-hp">PV</span></div>
+    <button class="btn-chg"
       onmousedown="startHold(()=>changeHP(1),event)" ontouchstart="startHold(()=>changeHP(1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
     <div class="stat-num" id="hp-val">20</div>
-    <button class="btn-minus"
+    <button class="btn-chg"
       onmousedown="startHold(()=>changeHP(-1),event)" ontouchstart="startHold(()=>changeHP(-1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">−</button>
   </div>
 
+  <!-- Boss -->
   <div id="boss-panel">
     <div id="immunity">
-      <div class="imm-row">
-        <div class="imm-wrap">
-          <span class="imm-sym" id="imm-sym"></span>
-          <div class="imm-x">✕</div>
-        </div>
-        <div class="imm-text" id="imm-text"></div>
+      <div class="imm-wrap">
+        <span class="imm-sym" id="imm-sym"></span>
+        <div class="imm-x">✕</div>
       </div>
+      <div class="imm-text" id="imm-text"></div>
     </div>
     <div id="card-zone">
-      <div id="card-side">
-        <button id="kill-btn" onclick="killBoss()"><img src="images/Dead_king.png" alt="Kill"></button>
-      </div>
-      <div id="boss-card"></div>
+      <button id="kill-btn" onclick="killBoss()">
+        <img src="images/Dead_king.png" alt="Kill">
+      </button>
+      <div id="card-wrap"></div>
     </div>
     <div id="suit-selector"></div>
   </div>
 
+  <!-- ATK -->
   <div class="stat-panel">
-    <div class="stat-label"><span class="icon-atk">🪓</span> <span id="lbl-atk">ATK</span></div>
-    <button class="btn-plus"
+    <div class="stat-lbl">🪓 <span id="lbl-atk">ATK</span></div>
+    <button class="btn-chg"
       onmousedown="startHold(()=>changeATK(1),event)" ontouchstart="startHold(()=>changeATK(1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
     <div class="stat-num" id="atk-val">10</div>
-    <button class="btn-minus"
+    <button class="btn-chg"
       onmousedown="startHold(()=>changeATK(-1),event)" ontouchstart="startHold(()=>changeATK(-1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">−</button>
   </div>
+
 </div>
 
 <!-- ══ Overlays ══ -->
