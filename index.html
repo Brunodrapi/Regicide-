@@ -15,33 +15,33 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 #bg svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
 
-/* ══ BOSS TRACK (top row) ══ */
+/* ══ LANG BAR ══ */
+#lang-bar{display:flex;gap:4px;justify-content:flex-end;align-items:center;
+  padding:2px 8px 0;flex-shrink:0;position:relative;z-index:1}
+.lang-btn{padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.2);color:rgba(255,255,255,0.55);font-size:9px;
+  font-weight:700;cursor:pointer;letter-spacing:.5px;line-height:1.4;font-family:Georgia,serif}
+.lang-btn.active{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.95);
+  border-color:rgba(255,255,255,0.5)}
+
+/* ══ BOSS TRACK ══ */
 #boss-track{height:18vh;min-height:56px;max-height:84px;display:flex;align-items:center;
   justify-content:center;padding:4px 8px;gap:5px;background:rgba(0,0,0,0.3);
   border-bottom:1px solid rgba(255,255,255,0.1);overflow-x:auto;overflow-y:hidden;
   flex-shrink:0;position:relative;z-index:1}
 #boss-track::-webkit-scrollbar{display:none}
 
-/* Base track card */
 .tc{position:relative;flex-shrink:0;width:34px;height:48px;background:white;color-scheme:light;
   border-radius:4px;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:1px;box-shadow:1px 2px 5px rgba(0,0,0,0.45)}
 .tc-rank{font-size:11px;font-weight:900;line-height:1}
 .tc-suit{font-size:13px;line-height:1}
-
-/* Killed card */
 .tc-dead .tc-x{position:absolute;inset:0;display:flex;align-items:center;
   justify-content:center;font-size:28px;font-weight:900;color:#cc0000;line-height:1}
-
-/* Current boss card */
 .tc-current{border:2px solid rgba(255,220,100,0.9);
   box-shadow:0 0 10px rgba(255,200,50,0.5),1px 2px 5px rgba(0,0,0,0.5)}
-
-/* Future cards – same rank */
 .tc-future-same{opacity:0.38;filter:grayscale(30%)}
-/* Future cards – other rank */
 .tc-future-other{opacity:0.18;filter:grayscale(60%)}
-/* Separator between rank groups */
 .tc-sep{width:1px;height:36px;background:rgba(255,255,255,0.2);flex-shrink:0}
 
 /* ══ MAIN AREA ══ */
@@ -72,7 +72,6 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 #boss-panel{flex:1;display:flex;flex-direction:column;align-items:center;
   justify-content:space-evenly;gap:2px}
 
-/* Immunity badge above card */
 #immunity{display:flex;flex-direction:column;align-items:center;gap:2px;
   background:rgba(0,0,0,0.25);border-radius:6px;padding:4px 8px}
 .imm-row{display:flex;align-items:center;gap:5px}
@@ -90,26 +89,20 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
   position:relative;overflow:hidden;color-scheme:light}
 .b-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:6px}
-/* bottom-right corner badge inside card */
 .b-corner{position:absolute;bottom:5px;right:5px;width:22px;height:22px;
   border-radius:5px;background:white;display:flex;align-items:center;
-  justify-content:center;font-size:15px;line-height:1;
-  box-shadow:none}
+  justify-content:center;font-size:15px;line-height:1;box-shadow:none}
 .b-rank{font-size:20px;font-weight:900;line-height:1}
 .b-suit{font-size:36px;line-height:1}
 .b-name{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:.5px}
-/* fallback (no image): show text normally */
-.b-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:100%}
 
-/* Suit selector */
 #suit-selector{display:flex;gap:7px;align-items:center}
 .suit-btn{width:32px;height:32px;border-radius:7px;border:2px solid rgba(255,255,255,0.18);
   background:rgba(0,0,0,0.2);font-size:17px;cursor:pointer;display:flex;
   align-items:center;justify-content:center;line-height:1;transition:transform .12s}
 .suit-btn.active{border-color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.2);
   transform:scale(1.2);box-shadow:0 0 8px rgba(255,255,255,0.3)}
-.suit-btn.killed{opacity:0.25;cursor:not-allowed;border-color:rgba(180,0,0,0.35);
-  position:relative}
+.suit-btn.killed{opacity:0.25;cursor:not-allowed;border-color:rgba(180,0,0,0.35);position:relative}
 .suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;color:#cc0000;font-weight:900}
 
 #card-zone{display:flex;flex-direction:row;align-items:center;gap:4px}
@@ -165,13 +158,23 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 </svg>
 </div>
 
+<!-- ══ Language bar ══ -->
+<div id="lang-bar">
+  <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
+  <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" data-lang="it" onclick="setLang('it')">IT</button>
+  <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" data-lang="jp" onclick="setLang('jp')">JP</button>
+  <button class="lang-btn" data-lang="cn" onclick="setLang('cn')">CN</button>
+</div>
+
 <!-- ══ Boss track ══ -->
 <div id="boss-track"></div>
 
 <!-- ══ Main ══ -->
 <div id="main">
   <div class="stat-panel">
-    <div class="stat-label"><span class="icon-hp">♥</span> PV</div>
+    <div class="stat-label"><span class="icon-hp">♥</span> <span id="lbl-hp">PV</span></div>
     <button class="btn-plus"
       onmousedown="startHold(()=>changeHP(1),event)" ontouchstart="startHold(()=>changeHP(1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
@@ -193,7 +196,7 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
     </div>
     <div id="card-zone">
       <div id="card-side">
-        <button id="kill-btn" onclick="killBoss()"><img src="images/Dead_king.png" alt="Tuer"></button>
+        <button id="kill-btn" onclick="killBoss()"><img src="images/Dead_king.png" alt="Kill"></button>
       </div>
       <div id="boss-card"></div>
     </div>
@@ -201,7 +204,7 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   </div>
 
   <div class="stat-panel">
-    <div class="stat-label"><span class="icon-atk">🪓</span> ATK</div>
+    <div class="stat-label"><span class="icon-atk">🪓</span> <span id="lbl-atk">ATK</span></div>
     <button class="btn-plus"
       onmousedown="startHold(()=>changeATK(1),event)" ontouchstart="startHold(()=>changeATK(1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
@@ -212,236 +215,20 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   </div>
 </div>
 
+<!-- ══ Overlays ══ -->
 <div class="overlay" id="ov-next">
-  <div class="ov-title">⚔ Rang vaincu ! ⚔</div>
+  <div class="ov-title" id="ov-rank-title"></div>
   <div class="ov-sub" id="ov-sub"></div>
-  <button class="btn-next" onclick="advanceBoss()">Au combat !</button>
+  <button class="btn-next" id="ov-fight-btn" onclick="advanceBoss()"></button>
 </div>
 
 <div class="overlay" id="ov-win">
   <div class="trophy">👑</div>
-  <div class="ov-title" style="color:#ffd700">Victoire Totale !</div>
-  <div class="ov-sub">Tous les boss ont été vaincus !</div>
-  <button class="btn-restart" onclick="resetGame()">Recommencer</button>
+  <div class="ov-title" id="ov-win-title" style="color:#ffd700"></div>
+  <div class="ov-sub" id="ov-win-sub"></div>
+  <button class="btn-restart" id="ov-restart-btn" onclick="resetGame()"></button>
 </div>
 
-<script>
-
-const SUITS=[
-  {sym:'♣',cls:'cb',code:'C',color:'#2e7d32'},
-  {sym:'♦',cls:'cr',code:'D',color:'#e65c00'},
-  {sym:'♥',cls:'cr',code:'H',color:'#c0392b'},
-  {sym:'♠',cls:'cb',code:'S',color:'#1a1a1a'},
-];
-const RANKS=[{sym:'J',name:'Valet',hp:20,atk:10},{sym:'Q',name:'Dame',hp:30,atk:15},{sym:'K',name:'Roi',hp:40,atk:20}];
-
-let rankIdx=0,suitIdx=0,killedSuits=new Set(),hp=20,atk=10,dead=[],locked=false;
-let holdTimer=null,holdInterval=null;
-
-function startHold(fn,e){
-  if(e&&e.type==='touchstart')e.preventDefault();
-  stopHold();fn();
-  holdTimer=setTimeout(()=>{holdInterval=setInterval(fn,80);},380);
-}
-function stopHold(){clearTimeout(holdTimer);clearInterval(holdInterval);}
-
-function boss(){return RANKS[rankIdx];}
-function suit(){return SUITS[suitIdx];}
-
-function setSuit(i){
-  if(killedSuits.has(i))return;
-  suitIdx=i;
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();
-}
-
-/* ── Boss track ── */
-function renderBossTrack(){
-  const track=document.getElementById('boss-track');
-  track.innerHTML='';
-
-  let deadIdx=0;
-
-  for(let r=0;r<RANKS.length;r++){
-    // separator between rank groups (not before first)
-    if(r>0){const sep=document.createElement('div');sep.className='tc-sep';track.appendChild(sep);}
-
-    for(let s=0;s<4;s++){
-      const rk=RANKS[r];
-      // How many of this rank have been killed?
-      const killedOfRank=dead.filter(d=>d.rank===rk.sym);
-      const isCurrentRank=r===rankIdx;
-      const isPastRank=r<rankIdx;
-
-      let card;
-
-      if(isPastRank){
-        // All 4 killed – find matching dead entry
-        const d=killedOfRank[s];
-        card=makeCard(rk.sym,d?d.suit:null,'dead');
-      } else if(isCurrentRank){
-        if(killedSuits.size>s){
-          // This slot is a killed suit in current rank
-          // find which dead entry corresponds
-          const killed=[...killedSuits];
-          const si=killed[s];
-          const st=SUITS[si];
-          card=makeCard(rk.sym,st,'dead');
-        } else if(killedSuits.size===s){
-          // This is the current boss being fought
-          card=makeCard(rk.sym,suit(),'current');
-        } else {
-          // Future slot same rank – suit unknown
-          card=makeCard(rk.sym,null,'future-same');
-        }
-      } else {
-        // Future rank
-        card=makeCard(rk.sym,null,'future-other');
-      }
-
-      track.appendChild(card);
-    }
-  }
-}
-
-function makeCard(rankSym,suit,state){
-  const el=document.createElement('div');
-  el.className='tc tc-'+state;
-  if(state==='future-same'||state==='future-other'){
-    // hidden suit
-    el.innerHTML=`<span class="tc-rank" style="color:#666">${rankSym}</span>`+
-      `<span class="tc-suit" style="color:#aaa;font-size:11px">?</span>`;
-  } else {
-    const cls=suit?suit.cls:'cb';
-    const sym=suit?suit.sym:'?';
-    el.innerHTML=`<span class="tc-rank ${cls}">${rankSym}</span>`+
-      `<span class="tc-suit ${cls}">${sym}</span>`;
-    if(state==='dead'){
-      el.classList.add('tc-dead');
-      el.innerHTML+=`<div class="tc-x">✕</div>`;
-    }
-  }
-  return el;
-}
-
-/* ── Immunity ── */
-const SUIT_POWERS={
-  '♣':'Trèfle · Immunité aux dégâts doublés',
-  '♦':'Carreau · Immunité à la pioche',
-  '♥':'Cœur · Immunité à la guérison',
-  '♠':'Pique · Immunité au bouclier',
-};
-function renderImmunity(){
-  const s=suit();
-  const sym=document.getElementById('imm-sym');
-  sym.textContent=s.sym;
-  sym.className='imm-sym '+s.cls;
-  document.getElementById('imm-text').textContent=SUIT_POWERS[s.sym]||'';
-}
-
-/* ── Boss card ── */
-function renderBossCard(){
-  const b=boss(),s=suit();
-  const imgSrc=`images/${b.sym}${s.code}.png`;
-  const card=document.getElementById('boss-card');
-  card.innerHTML='';
-  // bottom-right badge inside card
-  const badge=document.createElement('div');
-  badge.className='b-corner';
-  badge.style.border='none';
-  badge.innerHTML=`<span style="color:${s.color};font-size:15px;line-height:1">${s.sym}</span>`;
-  const img=document.createElement('img');
-  img.className='b-img';
-  img.alt=`${b.name} ${s.sym}`;
-  // onerror BEFORE src to guarantee it fires even on instant cache failure
-  img.onerror=function(){
-    this.remove();
-    ov.remove();
-    card.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
-      `<span class="b-suit ${s.cls}">${s.sym}</span>`+
-      `<span class="b-name">${b.name}</span>`;
-  };
-  img.src=imgSrc;
-  card.appendChild(img);
-  card.appendChild(badge);
-}
-
-/* ── Suit selector ── */
-function renderSuitSelector(){
-  const sel=document.getElementById('suit-selector');
-  sel.innerHTML='';
-  SUITS.forEach((s,i)=>{
-    const btn=document.createElement('button');
-    const killed=killedSuits.has(i),active=i===suitIdx;
-    btn.className='suit-btn'+(active?' active':'')+(killed?' killed':'');
-    btn.disabled=killed;
-    btn.innerHTML=`<span class="${s.cls}">${s.sym}</span>`;
-    if(!killed)btn.onclick=()=>setSuit(i);
-    sel.appendChild(btn);
-  });
-}
-
-/* ── Killed row (now inside track) ── */
-function updateNums(){
-  document.getElementById('hp-val').textContent=hp;
-  document.getElementById('atk-val').textContent=atk;
-}
-
-function changeHP(d){
-  if(locked)return;
-  hp=Math.max(0,hp+d);updateNums();
-  if(hp===0){locked=true;setTimeout(handleDeath,260);}
-}
-function changeATK(d){atk=Math.max(0,atk+d);updateNums();}
-
-function killBoss(){
-  if(locked)return;
-  locked=true;hp=0;updateNums();
-  setTimeout(handleDeath,260);
-}
-
-function handleDeath(){
-  dead.push({rank:boss().sym,suit:suit()});
-  killedSuits.add(suitIdx);
-
-  if(killedSuits.size<4){
-    for(let i=0;i<4;i++){if(!killedSuits.has(i)){suitIdx=i;break;}}
-    hp=boss().hp;atk=boss().atk;locked=false;
-    renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
-  } else {
-    rankIdx++;killedSuits=new Set();suitIdx=0;
-    if(rankIdx>=RANKS.length){
-      renderBossTrack();
-      document.getElementById('ov-win').classList.add('show');return;
-    }
-    renderBossTrack();
-    const next=RANKS[rankIdx];
-    document.getElementById('ov-sub').textContent=
-      `Prochain rang : ${next.name}s  (PV ${next.hp} · ATK ${next.atk})`;
-    document.getElementById('ov-next').classList.add('show');
-  }
-}
-
-function advanceBoss(){
-  hp=boss().hp;atk=boss().atk;locked=false;
-  document.getElementById('ov-next').classList.remove('show');
-  }
-
-function resetGame(){
-  rankIdx=0;suitIdx=0;killedSuits=new Set();dead=[];locked=false;
-  hp=RANKS[0].hp;atk=RANKS[0].atk;
-  document.getElementById('ov-win').classList.remove('show');
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
-}
-
-// Load font via FontFace API so it's guaranteed available before first render
-(function(){
-  if(typeof FontFace==='undefined'){init();return;}
-  const ff=new FontFace('VikingRunes','url(fonts/viking_middle_runes.ttf)');
-  ff.load().then(f=>{document.fonts.add(f);}).catch(()=>{}).finally(()=>{init();});
-})();
-function init(){
-  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
-}
-</script>
+<script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,238 @@
+const SUITS=[
+  {sym:'♣',cls:'cb',code:'C',color:'#2e7d32'},
+  {sym:'♦',cls:'cr',code:'D',color:'#e65c00'},
+  {sym:'♥',cls:'cr',code:'H',color:'#c0392b'},
+  {sym:'♠',cls:'cb',code:'S',color:'#1a1a1a'},
+];
+const RANKS=[{sym:'J',hp:20,atk:10},{sym:'Q',hp:30,atk:15},{sym:'K',hp:40,atk:20}];
+
+const LANGS={
+  fr:{hp:'PV',atk:'ATK',
+    ranks:['Valet','Dame','Roi'],ranks_pl:['Valets','Dames','Rois'],
+    powers:{'♣':'Trèfle · Immunité aux dégâts doublés','♦':'Carreau · Immunité à la pioche','♥':'Cœur · Immunité à la guérison','♠':'Pique · Immunité au bouclier'},
+    rank_defeated:'⚔ Rang vaincu ! ⚔',next_rank:'Prochain rang',fight:'Au combat !',
+    victory:'Victoire Totale !',all_defeated:'Tous les boss ont été vaincus !',restart:'Recommencer'},
+  en:{hp:'HP',atk:'ATK',
+    ranks:['Jack','Queen','King'],ranks_pl:['Jacks','Queens','Kings'],
+    powers:{'♣':'Clubs · Immunity to double damage','♦':'Diamonds · Immunity to drawing','♥':'Hearts · Immunity to healing','♠':'Spades · Immunity to shield'},
+    rank_defeated:'⚔ Rank Defeated! ⚔',next_rank:'Next rank',fight:'Fight!',
+    victory:'Total Victory!',all_defeated:'All bosses have been defeated!',restart:'Restart'},
+  it:{hp:'PV',atk:'ATK',
+    ranks:['Fante','Regina','Re'],ranks_pl:['Fanti','Regine','Re'],
+    powers:{'♣':'Fiori · Immunità ai danni doppi','♦':'Quadri · Immunità al pescaggio','♥':'Cuori · Immunità alla guarigione','♠':'Picche · Immunità allo scudo'},
+    rank_defeated:'⚔ Grado sconfitto! ⚔',next_rank:'Prossimo grado',fight:'Al combattimento!',
+    victory:'Vittoria Totale!',all_defeated:'Tutti i boss sono stati sconfitti!',restart:'Ricominciare'},
+  de:{hp:'LP',atk:'ATK',
+    ranks:['Bube','Dame','König'],ranks_pl:['Buben','Damen','Könige'],
+    powers:{'♣':'Kreuz · Immunität gegen doppelten Schaden','♦':'Karo · Immunität gegen Ziehen','♥':'Herz · Immunität gegen Heilung','♠':'Pik · Immunität gegen Schild'},
+    rank_defeated:'⚔ Rang besiegt! ⚔',next_rank:'Nächster Rang',fight:'Zum Kampf!',
+    victory:'Totaler Sieg!',all_defeated:'Alle Bosse wurden besiegt!',restart:'Neustart'},
+  jp:{hp:'HP',atk:'ATK',
+    ranks:['ジャック','クイーン','キング'],ranks_pl:['ジャック','クイーン','キング'],
+    powers:{'♣':'クラブ · 2倍ダメージ無効','♦':'ダイヤ · ドロー無効','♥':'ハート · 回復無効','♠':'スペード · シールド無効'},
+    rank_defeated:'⚔ ランク撃破！ ⚔',next_rank:'次のランク',fight:'戦闘へ！',
+    victory:'完全勝利！',all_defeated:'全ボスを倒した！',restart:'もう一度'},
+  cn:{hp:'HP',atk:'攻击',
+    ranks:['J','Q','K'],ranks_pl:['J','Q','K'],
+    powers:{'♣':'梅花 · 免疫双倍伤害','♦':'方块 · 免疫抽牌','♥':'红心 · 免疫治疗','♠':'黑桃 · 免疫护盾'},
+    rank_defeated:'⚔ 等级击败！ ⚔',next_rank:'下一等级',fight:'战斗！',
+    victory:'完全胜利！',all_defeated:'所有Boss已被击败！',restart:'重新开始'},
+};
+
+let currentLang='fr';
+function t(key){return LANGS[currentLang][key];}
+function rankName(idx){return t('ranks')[idx];}
+function rankNamePl(idx){return t('ranks_pl')[idx];}
+
+function setLang(code){
+  currentLang=code;
+  document.querySelectorAll('.lang-btn').forEach(b=>
+    b.classList.toggle('active',b.dataset.lang===code));
+  updateLangUI();
+  renderImmunity();
+  renderBossCard();
+}
+
+function updateLangUI(){
+  document.getElementById('lbl-hp').textContent=t('hp');
+  document.getElementById('lbl-atk').textContent=t('atk');
+  document.getElementById('ov-rank-title').textContent=t('rank_defeated');
+  document.getElementById('ov-fight-btn').textContent=t('fight');
+  document.getElementById('ov-win-title').textContent=t('victory');
+  document.getElementById('ov-win-sub').textContent=t('all_defeated');
+  document.getElementById('ov-restart-btn').textContent=t('restart');
+}
+
+/* ── State ── */
+let rankIdx=0,suitIdx=0,killedSuits=new Set(),hp=20,atk=10,dead=[],locked=false;
+let holdTimer=null,holdInterval=null;
+
+function startHold(fn,e){
+  if(e&&e.type==='touchstart')e.preventDefault();
+  stopHold();fn();
+  holdTimer=setTimeout(()=>{holdInterval=setInterval(fn,80);},380);
+}
+function stopHold(){clearTimeout(holdTimer);clearInterval(holdInterval);}
+
+function boss(){return RANKS[rankIdx];}
+function suit(){return SUITS[suitIdx];}
+
+function setSuit(i){
+  if(killedSuits.has(i))return;
+  suitIdx=i;
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();
+}
+
+/* ── Boss track ── */
+function renderBossTrack(){
+  const track=document.getElementById('boss-track');
+  track.innerHTML='';
+  for(let r=0;r<RANKS.length;r++){
+    if(r>0){const sep=document.createElement('div');sep.className='tc-sep';track.appendChild(sep);}
+    for(let s=0;s<4;s++){
+      const rk=RANKS[r];
+      const killedOfRank=dead.filter(d=>d.rank===rk.sym);
+      const isCurrentRank=r===rankIdx,isPastRank=r<rankIdx;
+      let card;
+      if(isPastRank){
+        const d=killedOfRank[s];
+        card=makeCard(rk.sym,d?d.suit:null,'dead');
+      } else if(isCurrentRank){
+        if(killedSuits.size>s){
+          const si=[...killedSuits][s];
+          card=makeCard(rk.sym,SUITS[si],'dead');
+        } else if(killedSuits.size===s){
+          card=makeCard(rk.sym,suit(),'current');
+        } else {
+          card=makeCard(rk.sym,null,'future-same');
+        }
+      } else {
+        card=makeCard(rk.sym,null,'future-other');
+      }
+      track.appendChild(card);
+    }
+  }
+}
+
+function makeCard(rankSym,s,state){
+  const el=document.createElement('div');
+  el.className='tc tc-'+state;
+  if(state==='future-same'||state==='future-other'){
+    el.innerHTML=`<span class="tc-rank" style="color:#666">${rankSym}</span>`+
+      `<span class="tc-suit" style="color:#aaa;font-size:11px">?</span>`;
+  } else {
+    const cls=s?s.cls:'cb',sym=s?s.sym:'?';
+    el.innerHTML=`<span class="tc-rank ${cls}">${rankSym}</span>`+
+      `<span class="tc-suit ${cls}">${sym}</span>`;
+    if(state==='dead'){el.classList.add('tc-dead');el.innerHTML+=`<div class="tc-x">✕</div>`;}
+  }
+  return el;
+}
+
+/* ── Immunity ── */
+function renderImmunity(){
+  const s=suit();
+  const sym=document.getElementById('imm-sym');
+  sym.textContent=s.sym;sym.className='imm-sym '+s.cls;
+  document.getElementById('imm-text').textContent=t('powers')[s.sym]||'';
+}
+
+/* ── Boss card ── */
+function renderBossCard(){
+  const b=boss(),s=suit(),bname=rankName(rankIdx);
+  const card=document.getElementById('boss-card');
+  card.innerHTML='';
+  const badge=document.createElement('div');
+  badge.className='b-corner';badge.style.border='none';
+  badge.innerHTML=`<span style="color:${s.color};font-size:15px;line-height:1">${s.sym}</span>`;
+  const img=document.createElement('img');
+  img.className='b-img';img.alt=`${bname} ${s.sym}`;
+  img.onerror=function(){
+    this.remove();
+    card.innerHTML=`<span class="b-rank ${s.cls}">${b.sym}</span>`+
+      `<span class="b-suit ${s.cls}">${s.sym}</span>`+
+      `<span class="b-name">${bname}</span>`;
+  };
+  img.src=`images/${b.sym}${s.code}.png`;
+  card.appendChild(img);card.appendChild(badge);
+}
+
+/* ── Suit selector ── */
+function renderSuitSelector(){
+  const sel=document.getElementById('suit-selector');
+  sel.innerHTML='';
+  SUITS.forEach((s,i)=>{
+    const btn=document.createElement('button');
+    const killed=killedSuits.has(i),active=i===suitIdx;
+    btn.className='suit-btn'+(active?' active':'')+(killed?' killed':'');
+    btn.disabled=killed;
+    btn.innerHTML=`<span class="${s.cls}">${s.sym}</span>`;
+    if(!killed)btn.onclick=()=>setSuit(i);
+    sel.appendChild(btn);
+  });
+}
+
+/* ── Numbers ── */
+function updateNums(){
+  document.getElementById('hp-val').textContent=hp;
+  document.getElementById('atk-val').textContent=atk;
+}
+
+function changeHP(d){
+  if(locked)return;
+  hp=Math.max(0,hp+d);updateNums();
+  if(hp===0){locked=true;setTimeout(handleDeath,260);}
+}
+function changeATK(d){atk=Math.max(0,atk+d);updateNums();}
+
+function killBoss(){
+  if(locked)return;
+  locked=true;hp=0;updateNums();
+  setTimeout(handleDeath,260);
+}
+
+/* ── Death & progression ── */
+function handleDeath(){
+  dead.push({rank:boss().sym,suit:suit()});
+  killedSuits.add(suitIdx);
+  if(killedSuits.size<4){
+    for(let i=0;i<4;i++){if(!killedSuits.has(i)){suitIdx=i;break;}}
+    hp=boss().hp;atk=boss().atk;locked=false;
+    renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+  } else {
+    rankIdx++;killedSuits=new Set();suitIdx=0;
+    renderBossTrack();
+    if(rankIdx>=RANKS.length){
+      document.getElementById('ov-win').classList.add('show');return;
+    }
+    const next=RANKS[rankIdx];
+    document.getElementById('ov-sub').textContent=
+      `${t('next_rank')} : ${rankNamePl(rankIdx)}  (${t('hp')} ${next.hp} · ${t('atk')} ${next.atk})`;
+    document.getElementById('ov-next').classList.add('show');
+  }
+}
+
+function advanceBoss(){
+  hp=boss().hp;atk=boss().atk;locked=false;
+  document.getElementById('ov-next').classList.remove('show');
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+}
+
+function resetGame(){
+  rankIdx=0;suitIdx=0;killedSuits=new Set();dead=[];locked=false;
+  hp=RANKS[0].hp;atk=RANKS[0].atk;
+  document.getElementById('ov-win').classList.remove('show');
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+}
+
+/* ── Boot ── */
+(function(){
+  if(typeof FontFace==='undefined'){init();return;}
+  const ff=new FontFace('VikingRunes','url(fonts/viking_middle_runes.ttf)');
+  ff.load().then(f=>{document.fonts.add(f);}).catch(()=>{}).finally(()=>{init();});
+})();
+
+function init(){
+  updateLangUI();
+  renderBossCard();renderImmunity();renderSuitSelector();renderBossTrack();updateNums();
+}
