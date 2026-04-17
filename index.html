@@ -29,17 +29,17 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   min-height:0;overflow:visible}
 
 /* ── Stat panels ── */
-.stat-panel{flex:1.3;display:flex;flex-direction:column;align-items:center;
+.stat-panel{flex:1.4;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:0;overflow:visible}
-.stat-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.38);
-  text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.stat-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,0.38);
+  text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
 .icon-hp{color:#aa2020}
-.btn-chg{font-size:clamp(30px,7vw,52px);font-weight:900;
+.btn-chg{font-size:clamp(40px,10vw,80px);font-weight:900;
   color:rgba(255,255,255,0.55);background:none;border:none;cursor:pointer;
-  line-height:1;padding:0 20px;font-family:Georgia,serif}
+  line-height:1;padding:0 24px;font-family:Georgia,serif}
 .btn-chg:active{color:rgba(255,255,255,0.95);transform:scale(1.1)}
-.stat-num{font-size:clamp(68px,15vw,112px);font-weight:900;color:#7a1a1a;
-  text-shadow:3px 4px 0 #3a0505,0 0 30px rgba(100,0,0,0.3);
+.stat-num{font-size:clamp(100px,24vw,200px);font-weight:900;color:#7a1a1a;
+  text-shadow:4px 5px 0 #3a0505,0 0 36px rgba(100,0,0,0.3);
   line-height:1;min-width:1.8ch;text-align:center;font-variant-numeric:tabular-nums;
   font-family:'VikingRunes',Georgia,serif!important}
 
@@ -62,41 +62,41 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 #card-zone{display:flex;align-items:flex-start;gap:8px;overflow:visible}
 
 /* White card + overflowing image */
-#card-wrap{position:relative;width:84px;height:118px;overflow:visible;flex-shrink:0}
+#card-wrap{position:relative;width:120px;height:168px;overflow:visible;flex-shrink:0}
 
-#boss-card{position:absolute;top:0;left:0;width:84px;height:118px;
-  background:#fdf6e8;border-radius:8px;color-scheme:light;
+#boss-card{position:absolute;top:0;left:0;width:120px;height:168px;
+  background:#fdf6e8;border-radius:10px;color-scheme:light;
   border:2px solid rgba(210,200,175,0.7);
-  box-shadow:0 6px 22px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.6);
+  box-shadow:0 8px 28px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.6);
   z-index:1}
 
-/* Character image — fills card, overflows slightly bottom-right */
+/* Character image — fills card, overflows bottom-right */
 .b-img{position:absolute;top:0;left:0;
-  width:106px;height:134px;
+  width:158px;height:204px;
   object-fit:contain;object-position:center bottom;
   z-index:2;pointer-events:none}
 
 /* Rank+suit label — sits above everything */
-.b-label-top{position:absolute;top:4px;left:4px;z-index:3;
+.b-label-top{position:absolute;top:5px;left:5px;z-index:3;
   display:flex;flex-direction:column;align-items:center;gap:1px;
-  background:#fdf6e8;border-radius:3px;padding:2px 4px;line-height:1}
-.b-rank{font-size:17px;font-weight:900;line-height:1}
-.b-suit{font-size:18px;line-height:1}
+  background:#fdf6e8;border-radius:4px;padding:3px 5px;line-height:1}
+.b-rank{font-size:22px;font-weight:900;line-height:1}
+.b-suit{font-size:23px;line-height:1}
 .b-fallback{display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:2px;width:100%;height:100%}
 .b-name{font-size:7px;color:#888;text-transform:uppercase;letter-spacing:.5px}
 
 /* Kill button (skull) */
-#kill-btn{width:30px;height:30px;border-radius:6px;background:#fdf6e8;
-  border:1px solid rgba(180,180,180,0.5);box-shadow:0 2px 6px rgba(0,0,0,0.3);
+#kill-btn{width:42px;height:42px;border-radius:8px;background:#fdf6e8;
+  border:1px solid rgba(180,180,180,0.5);box-shadow:0 2px 8px rgba(0,0,0,0.35);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  padding:3px;flex-shrink:0}
+  padding:4px;flex-shrink:0}
 #kill-btn img{width:100%;height:100%;object-fit:contain}
 #kill-btn:active{transform:scale(.88)}
 
 /* Suit selector — large plain symbols */
-#suit-selector{display:flex;gap:10px;align-items:center}
-.suit-btn{width:46px;height:46px;background:none;border:none;font-size:30px;
+#suit-selector{display:flex;gap:14px;align-items:center}
+.suit-btn{width:58px;height:58px;background:none;border:none;font-size:42px;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   line-height:1;opacity:0.72;transition:transform .12s,opacity .12s;position:relative;
   filter:drop-shadow(0 0 1px rgba(255,255,255,0.9)) drop-shadow(0 0 2px rgba(255,255,255,0.6))}
