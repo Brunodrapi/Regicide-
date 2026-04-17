@@ -111,14 +111,6 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 
 .cr{color:#7a0e0e}.cb{color:#151010}
 
-#fs-btn{position:fixed;bottom:max(16px,env(safe-area-inset-bottom,16px));
-  left:50%;transform:translateX(-50%);z-index:50;
-  width:52px;height:44px;border-radius:8px;
-  background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.3);
-  color:rgba(255,255,255,0.85);font-size:20px;cursor:pointer;display:flex;
-  align-items:center;justify-content:center;backdrop-filter:blur(6px)}
-#fs-btn:active{background:rgba(0,0,0,0.7);transform:translateX(-50%) scale(.94)}
-
 /* ══ OVERLAYS ══ */
 .overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0.86);
   backdrop-filter:blur(4px);align-items:center;justify-content:center;
@@ -161,9 +153,6 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
   <polygon fill="#2a3848" points="0,600 0,540 40,528 80,542 130,522 180,540 240,518 300,538 360,520 420,540 480,522 540,542 600,524 660,544 720,525 780,545 840,526 900,548 960,528 1000,545 1000,600"/>
 </svg>
 </div>
-
-<!-- ══ Fullscreen button ══ -->
-<button id="fs-btn" onclick="toggleFS()" title="Plein écran">⛶</button>
 
 <!-- ══ Boss track ══ -->
 <div id="boss-track"></div>
@@ -224,25 +213,6 @@ body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;posit
 </div>
 
 <script>
-function toggleFS(){
-  const el=document.documentElement;
-  const btn=document.getElementById('fs-btn');
-  const inFS=document.fullscreenElement||document.webkitFullscreenElement;
-  if(!inFS){
-    const req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
-    if(req) req.call(el).catch(()=>{});
-    if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
-  } else {
-    const ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;
-    if(ex) ex.call(document);
-  }
-}
-function updateFSBtn(){
-  const inFS=document.fullscreenElement||document.webkitFullscreenElement;
-  document.getElementById('fs-btn').textContent=inFS?'✕':'⛶';
-}
-document.addEventListener('fullscreenchange',updateFSBtn);
-document.addEventListener('webkitfullscreenchange',updateFSBtn);
 
 const SUITS=[{sym:'♣',cls:'cb'},{sym:'♦',cls:'cr'},{sym:'♥',cls:'cr'},{sym:'♠',cls:'cb'}];
 const RANKS=[{sym:'J',name:'Valet',hp:20,atk:10},{sym:'Q',name:'Dame',hp:30,atk:15},{sym:'K',name:'Roi',hp:40,atk:20}];
