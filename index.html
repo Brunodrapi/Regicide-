@@ -1,261 +1,172 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>Regicide – Boss Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
-  <style>
-    :root { --card: #f3eed8; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Regicide</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+html,body{width:100%;height:100%;overflow:hidden}
+body{display:flex;flex-direction:column;font-family:'Cinzel',Georgia,serif;position:relative;
+  background:linear-gradient(180deg,#c2dbd0 0%,#9dc0ba 20%,#7aa5a0 40%,#5d8888 60%,#456070 80%,#344a5e 100%)}
 
-    * {
-      box-sizing: border-box; margin: 0; padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none; touch-action: manipulation;
-    }
+/* ── Background mountain layers ── */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
 
-    html, body { width: 100%; height: 100%; overflow: hidden; }
+/* ── Killed row ── */
+#killed-row{height:17vh;min-height:52px;max-height:78px;display:flex;align-items:center;
+  justify-content:center;padding:4px 8px;gap:5px;background:rgba(0,0,0,0.28);
+  border-bottom:1px solid rgba(255,255,255,0.1);overflow-x:auto;overflow-y:hidden;
+  flex-shrink:0;position:relative;z-index:1}
+#killed-row::-webkit-scrollbar{display:none}
+.k-card{position:relative;flex-shrink:0;width:33px;height:46px;background:#f3eed8;
+  border-radius:4px;box-shadow:1px 2px 6px rgba(0,0,0,0.5);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.k-rank{font-size:11px;font-weight:900;line-height:1}
+.k-suit{font-size:13px;line-height:1}
+.k-x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:900;color:#cc0000;line-height:1}
 
-    body {
-      display: flex; flex-direction: column;
-      font-family: 'Cinzel', Georgia, serif;
-      background: linear-gradient(180deg,
-        #8eabab 0%, #6d9292 18%, #4e7878 38%,
-        #2e5555 62%, #1a3838 82%, #0c2020 100%);
-      position: relative;
-    }
+/* ── Main ── */
+#main{flex:1;display:flex;align-items:stretch;padding:6px 8px;gap:6px;
+  position:relative;z-index:1;min-height:0}
 
-    body::before {
-      content: '';
-      position: fixed; bottom: 0; left: 0; right: 0; height: 65%;
-      pointer-events: none; z-index: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Cpolygon points='0,300 0,200 30,170 55,185 90,145 130,175 170,120 210,160 255,100 300,148 340,115 385,145 420,95 465,140 510,80 555,130 600,105 645,140 690,90 740,125 775,105 800,130 800,300' fill='%23294848' opacity='0.7'/%3E%3Crect x='50' y='165' width='4' height='18' fill='%23213838' opacity='0.5'/%3E%3Cpolygon points='52,147 46,167 58,167' fill='%23213838' opacity='0.5'/%3E%3Crect x='130' y='158' width='4' height='20' fill='%23213838' opacity='0.5'/%3E%3Cpolygon points='132,138 126,160 138,160' fill='%23213838' opacity='0.5'/%3E%3Crect x='470' y='120' width='4' height='22' fill='%23213838' opacity='0.5'/%3E%3Cpolygon points='472,100 466,122 478,122' fill='%23213838' opacity='0.5'/%3E%3Crect x='645' y='120' width='4' height='22' fill='%23213838' opacity='0.5'/%3E%3Cpolygon points='647,100 641,122 653,122' fill='%23213838' opacity='0.5'/%3E%3C/svg%3E")
-        bottom / cover no-repeat;
-    }
+/* ── Stat panels ── */
+.stat-panel{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:5px}
+.stat-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);
+  text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:4px}
+.icon-hp{color:#aa2020;font-size:14px}
+.icon-atk{font-size:16px}
+.stat-num{font-size:clamp(42px,9vw,72px);font-weight:900;color:#7a1a1a;
+  text-shadow:2px 3px 0 #3a0505,0 0 20px rgba(100,0,0,0.25);line-height:1;
+  min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+.btn-plus{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,0.28);
+  background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.72);font-size:22px;
+  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;font-family:'Cinzel',Georgia,serif}
+.btn-minus{width:68px;height:68px;border-radius:50%;border:2px solid rgba(200,60,60,0.42);
+  background:rgba(130,12,12,0.22);color:rgba(255,185,185,0.9);font-size:40px;
+  font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;font-family:'Cinzel',Georgia,serif}
+.btn-plus:active{background:rgba(255,255,255,0.18);transform:scale(.88)}
+.btn-minus:active{background:rgba(130,12,12,0.44);transform:scale(.88)}
 
-    body::after {
-      content: '';
-      position: fixed; bottom: 0; left: 0; right: 0; height: 52%;
-      pointer-events: none; z-index: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 260'%3E%3Cpolygon points='0,260 0,175 40,135 75,160 115,105 155,145 200,85 245,128 285,100 325,138 370,78 415,125 455,95 500,135 545,72 590,118 635,90 680,130 720,100 760,125 800,108 800,260' fill='%23162e2e'/%3E%3Cpolygon points='0,260 0,215 60,175 110,205 170,160 230,195 295,148 360,188 430,155 500,195 570,148 640,190 720,158 800,185 800,260' fill='%230c2020'/%3E%3Crect x='25' y='205' width='5' height='25' fill='%23081818'/%3E%3Cpolygon points='27.5,185 21,207 34,207' fill='%23081818'/%3E%3Crect x='100' y='190' width='5' height='25' fill='%23081818'/%3E%3Cpolygon points='102.5,170 96,192 109,192' fill='%23081818'/%3E%3Crect x='355' y='178' width='5' height='25' fill='%23081818'/%3E%3Cpolygon points='357.5,158 351,180 364,180' fill='%23081818'/%3E%3Crect x='500' y='185' width='5' height='25' fill='%23081818'/%3E%3Cpolygon points='502.5,165 496,187 509,187' fill='%23081818'/%3E%3Crect x='690' y='148' width='5' height='25' fill='%23081818'/%3E%3Cpolygon points='692.5,128 686,150 699,150' fill='%23081818'/%3E%3Crect x='760' y='175' width='5' height='25' fill='%23081818'/%3E%3Cpolygon points='762.5,155 756,177 769,177' fill='%23081818'/%3E%3C/svg%3E")
-        bottom / cover no-repeat;
-    }
+/* ── Boss panel ── */
+#boss-panel{flex:1.1;display:flex;flex-direction:column;align-items:center;
+  justify-content:space-evenly;gap:3px}
+#power-bar{display:flex;align-items:center;gap:8px}
+.p-suit{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  font-size:21px;position:relative;border-radius:5px}
+.p-suit.blocked{opacity:0.25;filter:grayscale(70%)}
+.p-suit.blocked::after{content:'✕';position:absolute;inset:0;display:flex;
+  align-items:center;justify-content:center;font-size:25px;font-weight:900;
+  color:#e01111;line-height:1}
+#boss-card{width:82px;height:114px;background:#f3eed8;border-radius:8px;
+  border:2px solid rgba(210,200,175,0.7);
+  box-shadow:0 6px 22px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,255,255,0.6);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.b-rank{font-size:20px;font-weight:900;line-height:1}
+.b-suit{font-size:38px;line-height:1}
+.b-name{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:.5px}
 
-    /* ── Top row ── */
-    #killed-row {
-      height: 17vh; min-height: 54px; max-height: 80px;
-      display: flex; align-items: center; justify-content: center;
-      padding: 4px 8px; gap: 6px;
-      background: rgba(0,0,0,0.3);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      overflow-x: auto; overflow-y: hidden;
-      flex-shrink: 0; position: relative; z-index: 1;
-    }
-    #killed-row::-webkit-scrollbar { display: none; }
+/* ── Suit selector ── */
+#suit-selector{display:flex;gap:7px;align-items:center}
+.suit-btn{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.18);
+  background:rgba(0,0,0,0.2);font-size:17px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;line-height:1;transition:transform .12s}
+.suit-btn.active{border-color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.2);
+  transform:scale(1.2);box-shadow:0 0 8px rgba(255,255,255,0.3)}
+.suit-btn.killed{opacity:0.28;cursor:not-allowed;border-color:rgba(180,0,0,0.4);
+  position:relative}
+.suit-btn.killed::after{content:'✕';position:absolute;font-size:13px;
+  color:#cc0000;font-weight:900}
 
-    .k-card {
-      position: relative; flex-shrink: 0;
-      width: 34px; height: 48px;
-      background: var(--card); border-radius: 4px;
-      box-shadow: 1px 2px 6px rgba(0,0,0,0.5);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 1px;
-    }
-    .k-rank { font-size: 11px; font-weight: 900; line-height: 1; }
-    .k-suit { font-size: 13px; line-height: 1; }
-    .k-x {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 30px; font-weight: 900;
-      color: #cc0000; text-shadow: 0 0 6px rgba(200,0,0,0.4); line-height: 1;
-    }
+/* ── Kill button ── */
+#kill-btn{width:48px;height:48px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#5a1010,#2a0404);
+  border:2px solid #7a2828;box-shadow:0 3px 12px rgba(0,0,0,0.55);
+  font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#kill-btn:active{transform:scale(.92)}
 
-    /* ── Main ── */
-    #main {
-      flex: 1; display: flex; align-items: stretch;
-      padding: 6px 8px; gap: 6px;
-      position: relative; z-index: 1; min-height: 0;
-    }
+.cr{color:#7a0e0e}.cb{color:#151010}
 
-    .stat-panel {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 5px;
-    }
-
-    .stat-label {
-      font-size: 11px; font-weight: 700;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase; letter-spacing: 2px;
-      display: flex; align-items: center; gap: 4px;
-    }
-    .stat-label .icon-hp  { color: #aa2020; font-size: 14px; }
-    .stat-label .icon-atk { font-size: 16px; line-height: 1; }
-
-    .stat-num {
-      font-size: clamp(42px, 9vw, 72px); font-weight: 900;
-      color: #7a1a1a;
-      text-shadow: 2px 3px 0 #3a0505, 0 0 20px rgba(100,0,0,0.25);
-      line-height: 1; min-width: 2ch; text-align: center;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .btn-plus {
-      width: 46px; height: 46px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.28);
-      background: rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.72);
-      font-size: 22px; font-weight: bold; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .1s, background .1s; line-height: 1;
-      font-family: 'Cinzel', Georgia, serif;
-    }
-    .btn-plus:active { transform: scale(.88); background: rgba(255,255,255,0.18); }
-
-    .btn-minus {
-      width: 68px; height: 68px; border-radius: 50%;
-      border: 2px solid rgba(200,60,60,0.42);
-      background: rgba(130,12,12,0.22);
-      color: rgba(255,185,185,0.9);
-      font-size: 40px; font-weight: bold; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .1s, background .1s; line-height: 1;
-      font-family: 'Cinzel', Georgia, serif;
-    }
-    .btn-minus:active { transform: scale(.88); background: rgba(130,12,12,0.44); }
-
-    /* ── Boss panel ── */
-    #boss-panel {
-      flex: 1.1; display: flex; flex-direction: column;
-      align-items: center; justify-content: space-evenly; gap: 4px;
-    }
-
-    #power-bar { display: flex; align-items: center; gap: 8px; }
-
-    .p-suit {
-      width: 30px; height: 30px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 21px; position: relative; border-radius: 5px;
-      transition: opacity .3s;
-    }
-    .p-suit.blocked { opacity: 0.25; filter: grayscale(70%); }
-    .p-suit.blocked::after {
-      content: '✕'; position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 25px; font-weight: 900; color: #e01111; line-height: 1;
-    }
-
-    #boss-card {
-      width: 82px; height: 114px;
-      background: var(--card); border-radius: 8px;
-      border: 2px solid rgba(210,200,175,0.7);
-      box-shadow: 0 6px 22px rgba(0,0,0,0.55),
-                  inset 0 1px 0 rgba(255,255,255,0.6);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 1px;
-    }
-    .b-rank { font-size: 20px; font-weight: 900; line-height: 1; }
-    .b-suit { font-size: 38px; line-height: 1; }
-    .b-name { font-size: 8px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
-
-    /* ── Suit selector ── */
-    #suit-selector {
-      display: flex; gap: 7px; align-items: center;
-    }
-
-    .suit-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.2);
-      font-size: 17px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .12s, border-color .12s, background .12s;
-      line-height: 1;
-    }
-    .suit-btn.active {
-      border-color: rgba(255,255,255,0.7);
-      background: rgba(255,255,255,0.18);
-      transform: scale(1.18);
-      box-shadow: 0 0 8px rgba(255,255,255,0.25);
-    }
-    .suit-btn:active { transform: scale(.9); }
-
-    /* ── Kill button ── */
-    #kill-btn {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #5a1010, #2a0404);
-      border: 2px solid #7a2828;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.55),
-                  inset 0 1px 0 rgba(255,255,255,0.08);
-      font-size: 26px; line-height: 1; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .1s, box-shadow .1s;
-    }
-    #kill-btn:active { transform: scale(.92); box-shadow: 0 1px 6px rgba(0,0,0,0.5); }
-
-    .cr { color: #7a0e0e; }
-    .cb { color: #151010; }
-
-    /* ── Overlays ── */
-    .overlay {
-      display: none; position: fixed; inset: 0; z-index: 99;
-      background: rgba(0,0,0,0.86); backdrop-filter: blur(4px);
-      align-items: center; justify-content: center;
-      flex-direction: column; gap: 14px; padding: 20px;
-    }
-    .overlay.show { display: flex; }
-
-    .ov-title {
-      font-size: clamp(18px, 5vw, 28px); font-weight: 900;
-      color: #d4aa44; text-shadow: 0 0 22px rgba(212,170,68,0.5); text-align: center;
-    }
-    .ov-sub { font-size: 13px; color: rgba(255,255,255,0.6); text-align: center; }
-
-    .preview-card {
-      width: 68px; height: 96px; background: var(--card);
-      border-radius: 7px; border: 2px solid rgba(210,200,175,0.7);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.55);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 2px;
-    }
-
-    .btn-next {
-      padding: 11px 30px;
-      background: linear-gradient(155deg, #1a5c2a 0%, #0c2e15 100%);
-      color: rgba(195,255,195,0.95); border: 1px solid #3d8a4d;
-      border-radius: 7px; font-size: 14px; font-weight: bold; cursor: pointer;
-      font-family: 'Cinzel', Georgia, serif;
-      text-transform: uppercase; letter-spacing: 2px; transition: transform .1s;
-    }
-    .btn-next:active { transform: scale(.96); }
-
-    .btn-restart {
-      padding: 11px 30px;
-      background: linear-gradient(155deg, #5a1818 0%, #2d0808 100%);
-      color: rgba(255,195,195,0.95); border: 1px solid #8a3030;
-      border-radius: 7px; font-size: 14px; font-weight: bold; cursor: pointer;
-      font-family: 'Cinzel', Georgia, serif;
-      text-transform: uppercase; letter-spacing: 2px; transition: transform .1s;
-    }
-    .btn-restart:active { transform: scale(.96); }
-
-    .trophy { font-size: 50px; line-height: 1; }
-  </style>
+/* ── Overlays ── */
+.overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0.86);
+  backdrop-filter:blur(4px);align-items:center;justify-content:center;
+  flex-direction:column;gap:14px;padding:20px}
+.overlay.show{display:flex}
+.ov-title{font-size:clamp(18px,5vw,28px);font-weight:900;color:#d4aa44;
+  text-shadow:0 0 22px rgba(212,170,68,0.5);text-align:center}
+.ov-sub{font-size:13px;color:rgba(255,255,255,0.65);text-align:center}
+.btn-next{padding:11px 30px;background:linear-gradient(155deg,#1a5c2a,#0c2e15);
+  color:rgba(195,255,195,0.95);border:1px solid #3d8a4d;border-radius:7px;
+  font-size:14px;font-weight:bold;cursor:pointer;font-family:'Cinzel',Georgia,serif;
+  text-transform:uppercase;letter-spacing:2px}
+.btn-restart{padding:11px 30px;background:linear-gradient(155deg,#5a1818,#2d0808);
+  color:rgba(255,195,195,0.95);border:1px solid #8a3030;border-radius:7px;
+  font-size:14px;font-weight:bold;cursor:pointer;font-family:'Cinzel',Georgia,serif;
+  text-transform:uppercase;letter-spacing:2px}
+.trophy{font-size:50px;line-height:1}
+</style>
 </head>
 <body>
 
-<!-- ── Defeated bosses row ── -->
+<div id="bg">
+<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- sky handled by body gradient -->
+  <!-- layer 1: far alpine peaks -->
+  <polygon fill="#82a8a2" points="0,600 0,360 60,300 110,330 170,260 230,300 290,230 360,195 420,235 480,185 540,215 600,180 660,220 720,190 790,225 850,200 910,230 960,205 1000,220 1000,600"/>
+  <!-- layer 2: mid-far mountains -->
+  <polygon fill="#6a8e90" points="0,600 0,400 50,370 100,390 160,350 220,375 280,335 340,360 400,325 460,355 520,330 580,355 640,325 700,350 760,330 820,355 880,335 940,360 1000,340 1000,600"/>
+  <!-- layer 3: mid mountains + first pines -->
+  <polygon fill="#577888" points="0,600 0,430 40,415 90,425 140,400 200,420 260,390 320,410 380,385 440,408 500,388 560,410 620,390 680,412 740,392 800,415 860,395 920,418 970,400 1000,415 1000,600"/>
+  <!-- pine spires layer 3 -->
+  <polygon fill="#455e72" points="145,390 141,410 149,410"/>
+  <polygon fill="#455e72" points="145,400 138,420 152,420"/>
+  <polygon fill="#455e72" points="320,400 316,420 324,420"/>
+  <polygon fill="#455e72" points="320,410 313,430 327,430"/>
+  <polygon fill="#455e72" points="560,382 556,402 564,402"/>
+  <polygon fill="#455e72" points="560,392 553,412 567,412"/>
+  <polygon fill="#455e72" points="800,408 796,428 804,428"/>
+  <polygon fill="#455e72" points="800,418 793,438 807,438"/>
+  <!-- layer 4: near mountains -->
+  <polygon fill="#455e72" points="0,600 0,460 50,445 100,460 160,438 220,458 280,432 340,455 400,432 460,454 520,435 580,458 640,438 700,460 760,440 820,462 880,442 940,465 1000,448 1000,600"/>
+  <!-- layer 5: foreground hills with pines -->
+  <polygon fill="#364a5e" points="0,600 0,500 40,488 80,500 130,480 180,498 240,472 300,492 360,475 420,495 480,478 540,498 600,480 660,500 720,482 780,502 840,482 900,505 960,485 1000,500 1000,600"/>
+  <!-- pine trees foreground -->
+  <g fill="#2c3a4a">
+    <polygon points="60,488 53,510 67,510"/><polygon points="60,498 50,520 70,520"/><rect x="58" y="510" width="4" height="18"/>
+    <polygon points="150,475 143,497 157,497"/><polygon points="150,485 140,507 160,507"/><rect x="148" y="497" width="4" height="20"/>
+    <polygon points="260,468 253,490 267,490"/><polygon points="260,478 250,500 270,500"/><rect x="258" y="490" width="4" height="20"/>
+    <polygon points="360,472 352,494 368,494"/><polygon points="360,482 350,504 370,504"/><rect x="358" y="494" width="4" height="18"/>
+    <polygon points="450,475 443,497 457,497"/><polygon points="450,485 440,507 460,507"/><rect x="448" y="497" width="4" height="20"/>
+    <polygon points="550,476 543,498 557,498"/><polygon points="550,486 540,508 560,508"/><rect x="548" y="498" width="4" height="18"/>
+    <polygon points="650,479 643,501 657,501"/><polygon points="650,489 640,511 660,511"/><rect x="648" y="501" width="4" height="20"/>
+    <polygon points="760,480 753,502 767,502"/><polygon points="760,490 750,512 770,512"/><rect x="758" y="502" width="4" height="18"/>
+    <polygon points="870,478 863,500 877,500"/><polygon points="870,488 860,510 880,510"/><rect x="868" y="500" width="4" height="20"/>
+    <polygon points="960,482 953,504 967,504"/><polygon points="960,492 950,514 970,514"/><rect x="958" y="504" width="4" height="18"/>
+  </g>
+  <!-- layer 6: closest dark foreground -->
+  <polygon fill="#2a3848" points="0,600 0,540 40,528 80,542 130,522 180,540 240,518 300,538 360,520 420,540 480,522 540,542 600,524 660,544 720,525 780,545 840,526 900,548 960,528 1000,545 1000,600"/>
+</svg>
+</div>
+
 <div id="killed-row"></div>
 
-<!-- ── Main ── -->
 <div id="main">
-
   <div class="stat-panel">
     <div class="stat-label"><span class="icon-hp">♥</span> PV</div>
-    <button class="btn-plus"  onclick="changeHP(+1)">+</button>
+    <button class="btn-plus"
+      onmousedown="startHold(()=>changeHP(1),event)" ontouchstart="startHold(()=>changeHP(1),event)"
+      onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
     <div class="stat-num" id="hp-val">20</div>
-    <button class="btn-minus" onclick="changeHP(-1)">−</button>
+    <button class="btn-minus"
+      onmousedown="startHold(()=>changeHP(-1),event)" ontouchstart="startHold(()=>changeHP(-1),event)"
+      onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">−</button>
   </div>
 
   <div id="boss-panel">
@@ -267,21 +178,24 @@
 
   <div class="stat-panel">
     <div class="stat-label"><span class="icon-atk">🪓</span> ATK</div>
-    <button class="btn-plus"  onclick="changeATK(+1)">+</button>
+    <button class="btn-plus"
+      onmousedown="startHold(()=>changeATK(1),event)" ontouchstart="startHold(()=>changeATK(1),event)"
+      onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
     <div class="stat-num" id="atk-val">10</div>
-    <button class="btn-minus" onclick="changeATK(-1)">−</button>
+    <button class="btn-minus"
+      onmousedown="startHold(()=>changeATK(-1),event)" ontouchstart="startHold(()=>changeATK(-1),event)"
+      onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">−</button>
   </div>
-
 </div>
 
-<!-- ── Next boss overlay ── -->
+<!-- rank-change overlay -->
 <div class="overlay" id="ov-next">
-  <div class="ov-title">⚔ Boss Vaincu ! ⚔</div>
-  <div class="ov-sub" id="ov-next-sub"></div>
+  <div class="ov-title">⚔ Rang vaincu ! ⚔</div>
+  <div class="ov-sub" id="ov-sub"></div>
   <button class="btn-next" onclick="advanceBoss()">Au combat !</button>
 </div>
 
-<!-- ── Victory overlay ── -->
+<!-- win overlay -->
 <div class="overlay" id="ov-win">
   <div class="trophy">👑</div>
   <div class="ov-title" style="color:#ffd700">Victoire Totale !</div>
@@ -290,158 +204,127 @@
 </div>
 
 <script>
-  const SUITS = [
-    { sym: '♣', cls: 'cb', name: 'Trèfle'  },
-    { sym: '♦', cls: 'cr', name: 'Carreau' },
-    { sym: '♥', cls: 'cr', name: 'Cœur'    },
-    { sym: '♠', cls: 'cb', name: 'Pique'   },
-  ];
+const SUITS=[{sym:'♣',cls:'cb'},{sym:'♦',cls:'cr'},{sym:'♥',cls:'cr'},{sym:'♠',cls:'cb'}];
+const RANKS=[{sym:'J',name:'Valets',hp:20,atk:10},{sym:'Q',name:'Dames',hp:30,atk:15},{sym:'K',name:'Rois',hp:40,atk:20}];
 
-  const RANKS = [
-    { sym: 'J', name: 'Valet', hp: 20, atk: 10 },
-    { sym: 'Q', name: 'Dame',  hp: 30, atk: 15 },
-    { sym: 'K', name: 'Roi',   hp: 40, atk: 20 },
-  ];
+let rankIdx=0,suitIdx=0,killedSuits=new Set(),hp=20,atk=10,dead=[],locked=false;
+let holdTimer=null,holdInterval=null;
 
-  let rankIdx = 0;
-  let suitIdx = 0;
-  let hp      = RANKS[0].hp;
-  let atk     = RANKS[0].atk;
-  let dead    = [];
-  let locked  = false;
+function startHold(fn,e){
+  if(e&&e.type==='touchstart')e.preventDefault();
+  stopHold();fn();
+  holdTimer=setTimeout(()=>{holdInterval=setInterval(fn,80);},380);
+}
+function stopHold(){clearTimeout(holdTimer);clearInterval(holdInterval);}
 
-  function boss()      { return RANKS[rankIdx]; }
-  function suit()      { return SUITS[suitIdx]; }
+function boss(){return RANKS[rankIdx];}
+function suit(){return SUITS[suitIdx];}
 
-  /* ── Suit selector ── */
-  function setSuit(i) {
-    suitIdx = i;
-    renderBossCard();
-    renderPowerBar();
-    renderSuitSelector();
-  }
+function setSuit(i){
+  if(killedSuits.has(i))return;
+  suitIdx=i;
+  renderBossCard();renderPowerBar();renderSuitSelector();
+}
 
-  function renderSuitSelector() {
-    const sel = document.getElementById('suit-selector');
-    sel.innerHTML = '';
-    SUITS.forEach((s, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'suit-btn' + (i === suitIdx ? ' active' : '');
-      btn.innerHTML = `<span class="${s.cls}">${s.sym}</span>`;
-      btn.onclick = () => setSuit(i);
-      sel.appendChild(btn);
-    });
-  }
+function renderSuitSelector(){
+  const sel=document.getElementById('suit-selector');
+  sel.innerHTML='';
+  SUITS.forEach((s,i)=>{
+    const btn=document.createElement('button');
+    const killed=killedSuits.has(i),active=i===suitIdx;
+    btn.className='suit-btn'+(active?' active':'')+(killed?' killed':'');
+    btn.disabled=killed;
+    btn.innerHTML=`<span class="${s.cls}">${s.sym}</span>`;
+    if(!killed)btn.onclick=()=>setSuit(i);
+    sel.appendChild(btn);
+  });
+}
 
-  /* ── Boss card ── */
-  function renderBossCard() {
-    const b = boss(), s = suit();
-    document.getElementById('boss-card').innerHTML =
-      `<span class="b-rank ${s.cls}">${b.sym}</span>` +
-      `<span class="b-suit ${s.cls}">${s.sym}</span>` +
-      `<span class="b-name">${b.name}</span>`;
-  }
+function renderBossCard(){
+  const b=boss(),s=suit();
+  document.getElementById('boss-card').innerHTML=
+    `<span class="b-rank ${s.cls}">${b.sym}</span>`+
+    `<span class="b-suit ${s.cls}">${s.sym}</span>`+
+    `<span class="b-name">${b.name.slice(0,-1)}</span>`;
+}
 
-  /* ── Power bar ── */
-  function renderPowerBar() {
-    const bar = document.getElementById('power-bar');
-    bar.innerHTML = '';
-    SUITS.forEach(s => {
-      const el = document.createElement('div');
-      el.className = 'p-suit' + (s.sym === suit().sym ? ' blocked' : '');
-      el.innerHTML = `<span class="${s.cls}">${s.sym}</span>`;
-      bar.appendChild(el);
-    });
-  }
+function renderPowerBar(){
+  const bar=document.getElementById('power-bar');
+  bar.innerHTML='';
+  SUITS.forEach(s=>{
+    const el=document.createElement('div');
+    el.className='p-suit'+(s.sym===suit().sym?' blocked':'');
+    el.innerHTML=`<span class="${s.cls}">${s.sym}</span>`;
+    bar.appendChild(el);
+  });
+}
 
-  /* ── Killed row ── */
-  function renderKilledRow() {
-    const row = document.getElementById('killed-row');
-    row.innerHTML = '';
-    dead.forEach(d => {
-      const el = document.createElement('div');
-      el.className = 'k-card';
-      el.innerHTML =
-        `<span class="k-rank ${d.suit.cls}">${d.rank}</span>` +
-        `<span class="k-suit ${d.suit.cls}">${d.suit.sym}</span>` +
-        `<div class="k-x">✕</div>`;
-      row.appendChild(el);
-    });
-  }
+function renderKilledRow(){
+  const row=document.getElementById('killed-row');
+  row.innerHTML='';
+  dead.forEach(d=>{
+    const el=document.createElement('div');
+    el.className='k-card';
+    el.innerHTML=`<span class="k-rank ${d.suit.cls}">${d.rank}</span>`+
+      `<span class="k-suit ${d.suit.cls}">${d.suit.sym}</span>`+
+      `<div class="k-x">✕</div>`;
+    row.appendChild(el);
+  });
+}
 
-  function updateNums() {
-    document.getElementById('hp-val').textContent  = hp;
-    document.getElementById('atk-val').textContent = atk;
-  }
+function updateNums(){
+  document.getElementById('hp-val').textContent=hp;
+  document.getElementById('atk-val').textContent=atk;
+}
 
-  /* ── Actions ── */
-  function changeHP(delta) {
-    if (locked) return;
-    hp = Math.max(0, hp + delta);
-    updateNums();
-    if (hp === 0) { locked = true; setTimeout(handleDeath, 260); }
-  }
+function changeHP(d){
+  if(locked)return;
+  hp=Math.max(0,hp+d);updateNums();
+  if(hp===0){locked=true;setTimeout(handleDeath,260);}
+}
+function changeATK(d){atk=Math.max(0,atk+d);updateNums();}
 
-  function changeATK(delta) {
-    atk = Math.max(0, atk + delta);
-    updateNums();
-  }
+function killBoss(){
+  if(locked)return;
+  locked=true;hp=0;updateNums();
+  setTimeout(handleDeath,260);
+}
 
-  function killBoss() {
-    if (locked) return;
-    locked = true;
-    hp = 0;
-    updateNums();
-    setTimeout(handleDeath, 260);
-  }
+function handleDeath(){
+  dead.push({rank:boss().sym,suit:suit()});
+  killedSuits.add(suitIdx);
+  renderKilledRow();
 
-  function handleDeath() {
-    dead.push({ rank: boss().sym, suit: suit() });
-    renderKilledRow();
-
-    rankIdx++;
-    if (rankIdx >= RANKS.length) {
-      document.getElementById('ov-win').classList.add('show');
-      return;
-    }
-
-    const next = RANKS[rankIdx];
-    document.getElementById('ov-next-sub').textContent =
-      `Prochain rang : ${next.name}s  (PV ${next.hp} / ATK ${next.atk})`;
+  if(killedSuits.size<4){
+    // next suit in same rank
+    for(let i=0;i<4;i++){if(!killedSuits.has(i)){suitIdx=i;break;}}
+    hp=boss().hp;atk=boss().atk;locked=false;
+    renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+  } else {
+    // all 4 of this rank done
+    rankIdx++;killedSuits=new Set();suitIdx=0;
+    if(rankIdx>=RANKS.length){document.getElementById('ov-win').classList.add('show');return;}
+    const next=RANKS[rankIdx];
+    document.getElementById('ov-sub').textContent=
+      `Prochain : ${next.name}  (PV ${next.hp} · ATK ${next.atk})`;
     document.getElementById('ov-next').classList.add('show');
   }
+}
 
-  function advanceBoss() {
-    const b = boss();
-    hp  = b.hp;
-    atk = b.atk;
-    locked = false;
-    document.getElementById('ov-next').classList.remove('show');
-    renderBossCard();
-    renderPowerBar();
-    renderSuitSelector();
-    updateNums();
-  }
+function advanceBoss(){
+  hp=boss().hp;atk=boss().atk;locked=false;
+  document.getElementById('ov-next').classList.remove('show');
+  renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+}
 
-  function resetGame() {
-    rankIdx = 0; suitIdx = 0;
-    dead = []; locked = false;
-    hp  = RANKS[0].hp;
-    atk = RANKS[0].atk;
-    document.getElementById('ov-win').classList.remove('show');
-    renderKilledRow();
-    renderBossCard();
-    renderPowerBar();
-    renderSuitSelector();
-    updateNums();
-  }
+function resetGame(){
+  rankIdx=0;suitIdx=0;killedSuits=new Set();dead=[];locked=false;
+  hp=RANKS[0].hp;atk=RANKS[0].atk;
+  document.getElementById('ov-win').classList.remove('show');
+  renderKilledRow();renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
+}
 
-  /* ── Init ── */
-  renderKilledRow();
-  renderBossCard();
-  renderPowerBar();
-  renderSuitSelector();
-  updateNums();
+renderKilledRow();renderBossCard();renderPowerBar();renderSuitSelector();updateNums();
 </script>
 </body>
 </html>
