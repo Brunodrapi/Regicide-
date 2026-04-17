@@ -46,9 +46,10 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 /* ══ MAIN AREA ══ */
 #main{flex:1;display:flex;align-items:stretch;padding:6px 8px;gap:6px;
-  position:relative;z-index:1;min-height:0}
+  position:relative;z-index:1;min-height:0;justify-content:center}
+.stat-panel{flex:0 0 auto;width:clamp(80px,22vw,140px)}
 
-.stat-panel{flex:1;display:flex;flex-direction:column;align-items:center;
+.stat-panel{display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:5px}
 .stat-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);
   text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:4px}
