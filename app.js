@@ -54,8 +54,8 @@ function setLang(code){
 }
 
 function updateLangUI(){
-  document.getElementById('lbl-hp').textContent=t('hp');
-  document.getElementById('lbl-atk').textContent=t('atk');
+  const lh=document.getElementById('lbl-hp');if(lh)lh.textContent=t('hp');
+  const la=document.getElementById('lbl-atk');if(la)la.textContent=t('atk');
   document.getElementById('ov-rank-title').textContent=t('rank_defeated');
   document.getElementById('ov-fight-btn').textContent=t('fight');
   document.getElementById('ov-win-title').textContent=t('victory');
