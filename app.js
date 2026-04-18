@@ -1,4 +1,16 @@
-const SUITS=[
+// Real available height → CSS custom property --vh (1% of visible height)
+// visualViewport handles iOS Safari toolbar correctly
+(function(){
+  function setVH(){
+    const h=window.visualViewport?window.visualViewport.height:window.innerHeight;
+    document.documentElement.style.setProperty('--vh',(h*0.01)+'px');
+  }
+  if(window.visualViewport)window.visualViewport.addEventListener('resize',setVH);
+  window.addEventListener('resize',setVH);
+  setVH();
+})();
+
+
   {sym:'♣',cls:'cb',code:'C',color:'#2e7d32'},
   {sym:'♦',cls:'cr',code:'D',color:'#e65c00'},
   {sym:'♥',cls:'cr',code:'H',color:'#c0392b'},
