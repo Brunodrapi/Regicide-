@@ -124,14 +124,16 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 /* ══ PORTRAIT ══ */
 @media (orientation:portrait){
   #main{display:grid;
-    grid-template-areas:"hp atk""boss boss";
-    grid-template-rows:calc(var(--vh)*18) 1fr;
+    grid-template-areas:"boss boss""hp atk";
+    grid-template-rows:1fr calc(var(--vh)*25);
     grid-template-columns:1fr 1fr}
   #main>.stat-panel:first-child{grid-area:hp}
   #main>.stat-panel:last-child{grid-area:atk}
   #boss-panel{grid-area:boss;min-height:0}
-  .stat-num{font-size:min(14vw,calc(var(--vh)*10))}
-  .btn-chg{font-size:min(8vw,calc(var(--vh)*5));padding:0 1vw}
+  .stat-panel{flex-direction:row;justify-content:center;align-items:center;gap:4vw}
+  .stat-num{font-size:min(20vw,calc(var(--vh)*16))}
+  .btn-chg{font-size:min(14vw,calc(var(--vh)*12));padding:0 3vw}
+  #card-wrap{height:calc(var(--vh)*50);width:auto}
 }
 
 /* ══ OVERLAYS ══ */
