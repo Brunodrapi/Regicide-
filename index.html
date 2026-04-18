@@ -11,7 +11,7 @@
 :root{--vh:1vh}
 html,body{width:100%;height:calc(var(--vh)*100);overflow:hidden}
 body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relative;
-  background:url('images/banner.png') center/200% no-repeat fixed;}
+  background:url('images/banner.png') center/cover no-repeat fixed;}
 
 
 /* ══ LANG BAR ══ */
@@ -120,6 +120,7 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 /* ══ LANDSCAPE: immunity docked to stat panel ══ */
 @media (orientation:landscape){
+  body{background-position:center 20%;background-size:150%}
   .stat-panel{position:relative}
   /* Reduce card height so image (121%) stays within card-zone — no clipping needed */
   #card-wrap{height:calc(var(--vh)*64)}
