@@ -123,17 +123,40 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 /* ══ PORTRAIT ══ */
 @media (orientation:portrait){
+  /* Grid: boss panel fills top, stats row at bottom */
   #main{display:grid;
     grid-template-areas:"boss boss""hp atk";
-    grid-template-rows:1fr calc(var(--vh)*25);
+    grid-template-rows:1fr calc(var(--vh)*22);
     grid-template-columns:1fr 1fr}
   #main>.stat-panel:first-child{grid-area:hp}
   #main>.stat-panel:last-child{grid-area:atk}
   #boss-panel{grid-area:boss;min-height:0}
+
+  /* Stat panels: horizontal, big thumb buttons */
   .stat-panel{flex-direction:row;justify-content:center;align-items:center;gap:4vw}
-  .stat-num{font-size:min(20vw,calc(var(--vh)*16))}
-  .btn-chg{font-size:min(14vw,calc(var(--vh)*12));padding:0 3vw}
-  #card-wrap{height:calc(var(--vh)*50);width:auto}
+  .stat-num{font-size:min(20vw,calc(var(--vh)*14))}
+  .btn-chg{font-size:min(14vw,calc(var(--vh)*11));padding:0 3vw}
+
+  /* Card zone: column — card on top, kill-btn at bottom */
+  #card-zone{flex-direction:column;align-items:center;justify-content:space-between;
+    padding-bottom:4px}
+  #card-wrap{order:1;height:min(73%,calc(var(--vh)*43));width:auto}
+  #kill-btn{order:2;width:min(16vw,calc(var(--vh)*9));height:min(16vw,calc(var(--vh)*9));
+    flex-shrink:0}
+
+  /* Immunity: bigger */
+  #immunity{padding:5px 12px}
+  .imm-wrap{width:26px;height:26px}
+  .imm-sym{font-size:21px}
+  .imm-x{font-size:21px}
+  .imm-text{font-size:11px;max-width:none}
+
+  /* Suit buttons: larger */
+  .suit-btn{width:min(15vw,calc(var(--vh)*12));height:min(15vw,calc(var(--vh)*12));
+    font-size:min(11vw,calc(var(--vh)*10))}
+
+  /* Lang bar: larger */
+  .lang-btn{font-size:11px;padding:3px 8px}
 }
 
 /* ══ OVERLAYS ══ */
