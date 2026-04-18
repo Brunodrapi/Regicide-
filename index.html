@@ -146,10 +146,11 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   .stat-num{font-size:min(14vw,calc(var(--vh)*12));min-width:0}
   .btn-chg{font-size:min(12vw,calc(var(--vh)*10));padding:0 1.5vw}
 
-  /* Card zone: column — card centered, kill-btn at bottom-left */
-  #card-zone{flex-direction:column;align-items:flex-start;justify-content:flex-start}
-  #card-wrap{order:1;align-self:center;height:min(85%,calc(var(--vh)*52));width:auto}
-  #kill-btn{order:2;margin-top:auto;align-self:flex-start;
+  /* Card zone: positioning context; card centered; kill-btn absolute bottom-left */
+  #card-zone{flex-direction:column;align-items:center;justify-content:flex-start;position:relative}
+  /* Explicit vh dimensions — avoid % height on flex item (resolves to 0 in flex chain) */
+  #card-wrap{height:calc(var(--vh)*52);width:calc(var(--vh)*37.1);flex-shrink:0}
+  #kill-btn{position:absolute;bottom:0;left:0;
     width:min(16vw,calc(var(--vh)*9));height:min(16vw,calc(var(--vh)*9))}
 
   /* Immunity: bigger */

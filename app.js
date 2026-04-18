@@ -99,17 +99,19 @@ function setSuit(i){
 /* ── Immunity ── */
 // ♦=1 ♥=2 → HP panel ; ♣=0 ♠=3 → ATK panel
 function moveImmunity(){
-  const imm=document.getElementById('immunity');
-  if(!imm)return;
-  const portrait=window.matchMedia('(orientation:portrait)').matches;
-  if(portrait){
-    const footer=document.getElementById('boss-footer');
-    if(footer&&imm.parentElement!==footer)footer.insertBefore(imm,footer.firstChild);
-  }else{
-    const targetId=(suitIdx===1||suitIdx===2)?'hp-panel':'atk-panel';
-    const target=document.getElementById(targetId);
-    if(target&&imm.parentElement!==target)target.appendChild(imm);
-  }
+  try{
+    const imm=document.getElementById('immunity');
+    if(!imm)return;
+    const portrait=window.innerWidth<=window.innerHeight;
+    if(portrait){
+      const footer=document.getElementById('boss-footer');
+      if(footer&&imm.parentElement!==footer)footer.insertBefore(imm,footer.firstChild);
+    }else{
+      const targetId=(suitIdx===1||suitIdx===2)?'hp-panel':'atk-panel';
+      const target=document.getElementById(targetId);
+      if(target&&imm.parentElement!==target)target.appendChild(imm);
+    }
+  }catch(e){}
 }
 
 function renderImmunity(){
