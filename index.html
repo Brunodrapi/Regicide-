@@ -132,17 +132,16 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   #main>.stat-panel:last-child{grid-area:atk}
   #boss-panel{grid-area:boss;min-height:0}
 
-  /* Stat panels: horizontal, big thumb buttons */
-  .stat-panel{flex-direction:row;justify-content:center;align-items:center;gap:4vw}
-  .stat-num{font-size:min(20vw,calc(var(--vh)*14))}
-  .btn-chg{font-size:min(14vw,calc(var(--vh)*11));padding:0 3vw}
+  /* Stat panels: fix overflow — no min-width, smaller fonts, tighter gap */
+  .stat-panel{flex-direction:row;justify-content:center;align-items:center;gap:1.5vw}
+  .stat-num{font-size:min(14vw,calc(var(--vh)*12));min-width:0}
+  .btn-chg{font-size:min(12vw,calc(var(--vh)*10));padding:0 1.5vw}
 
-  /* Card zone: column — card on top, kill-btn at bottom */
-  #card-zone{flex-direction:column;align-items:center;justify-content:space-between;
-    padding-bottom:4px}
-  #card-wrap{order:1;height:min(73%,calc(var(--vh)*43));width:auto}
-  #kill-btn{order:2;width:min(16vw,calc(var(--vh)*9));height:min(16vw,calc(var(--vh)*9));
-    flex-shrink:0}
+  /* Card zone: column — card centered, kill-btn at bottom-left */
+  #card-zone{flex-direction:column;align-items:flex-start;justify-content:flex-start}
+  #card-wrap{order:1;align-self:center;height:min(85%,calc(var(--vh)*52));width:auto}
+  #kill-btn{order:2;margin-top:auto;align-self:flex-start;
+    width:min(16vw,calc(var(--vh)*9));height:min(16vw,calc(var(--vh)*9))}
 
   /* Immunity: bigger */
   #immunity{padding:5px 12px}
