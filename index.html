@@ -48,9 +48,14 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 #boss-panel{flex:1;display:flex;flex-direction:column;align-items:center;
   justify-content:flex-start;padding:0;gap:2px;overflow:visible;min-height:0}
 
+/* Boss footer: immunity + suit selector — same width */
+#boss-footer{margin-top:auto;display:inline-flex;flex-direction:column;
+  align-items:stretch;gap:3px;padding-bottom:clamp(2px,1vh,10px)}
+
 /* Immunity */
 #immunity{display:flex;align-items:center;gap:5px;
-  background:rgba(0,0,0,0.22);border-radius:5px;padding:2px 6px}
+  background:rgba(0,0,0,0.22);border-radius:5px;padding:2px 8px;
+  justify-content:center}
 .imm-wrap{position:relative;width:18px;height:18px;display:flex;
   align-items:center;justify-content:center;flex-shrink:0}
 .imm-sym{font-size:15px;line-height:1;opacity:0.35;filter:grayscale(50%)}
@@ -99,9 +104,9 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 #kill-btn img{width:100%;height:100%;object-fit:contain}
 #kill-btn:active{transform:scale(.88)}
 
-/* Suit selector — pushed to bottom of boss panel */
+/* Suit selector */
 #suit-selector{display:flex;gap:clamp(8px,2vw,36px);align-items:center;
-  margin-top:auto;padding-bottom:clamp(2px,1vh,10px)}
+  justify-content:center}
 .suit-btn{width:min(11vw,calc(var(--vh)*13));height:min(11vw,calc(var(--vh)*13));
   background:none;border:none;font-size:min(8vw,calc(var(--vh)*11));
   cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -115,6 +120,19 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   text-shadow:0 0 8px rgba(180,0,0,0.5)}
 
 .cr{color:#7a1a1a}.cb{color:#7a6048}
+
+/* ══ PORTRAIT ══ */
+@media (orientation:portrait){
+  #main{display:grid;
+    grid-template-areas:"hp atk""boss boss";
+    grid-template-rows:calc(var(--vh)*18) 1fr;
+    grid-template-columns:1fr 1fr}
+  #main>.stat-panel:first-child{grid-area:hp}
+  #main>.stat-panel:last-child{grid-area:atk}
+  #boss-panel{grid-area:boss;min-height:0}
+  .stat-num{font-size:min(14vw,calc(var(--vh)*10))}
+  .btn-chg{font-size:min(8vw,calc(var(--vh)*5));padding:0 1vw}
+}
 
 /* ══ OVERLAYS ══ */
 .overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,0.86);
@@ -191,14 +209,16 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
       </button>
       <div id="card-wrap"></div>
     </div>
-    <div id="immunity">
-      <div class="imm-wrap">
-        <span class="imm-sym" id="imm-sym"></span>
-        <div class="imm-x">✕</div>
+    <div id="boss-footer">
+      <div id="immunity">
+        <div class="imm-wrap">
+          <span class="imm-sym" id="imm-sym"></span>
+          <div class="imm-x">✕</div>
+        </div>
+        <div class="imm-text" id="imm-text"></div>
       </div>
-      <div class="imm-text" id="imm-text"></div>
+      <div id="suit-selector"></div>
     </div>
-    <div id="suit-selector"></div>
   </div>
 
   <!-- ATK -->
