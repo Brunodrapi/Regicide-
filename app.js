@@ -4,6 +4,7 @@
   function setVH(){
     const h=window.visualViewport?window.visualViewport.height:window.innerHeight;
     document.documentElement.style.setProperty('--vh',(h*0.01)+'px');
+    if(typeof moveImmunity==='function')moveImmunity();
   }
   if(window.visualViewport)window.visualViewport.addEventListener('resize',setVH);
   window.addEventListener('resize',setVH);
@@ -96,11 +97,27 @@ function setSuit(i){
 }
 
 /* ── Immunity ── */
+// ♦=1 ♥=2 → HP panel ; ♣=0 ♠=3 → ATK panel
+function moveImmunity(){
+  const imm=document.getElementById('immunity');
+  if(!imm)return;
+  const portrait=window.matchMedia('(orientation:portrait)').matches;
+  if(portrait){
+    const footer=document.getElementById('boss-footer');
+    if(footer&&imm.parentElement!==footer)footer.insertBefore(imm,footer.firstChild);
+  }else{
+    const targetId=(suitIdx===1||suitIdx===2)?'hp-panel':'atk-panel';
+    const target=document.getElementById(targetId);
+    if(target&&imm.parentElement!==target)target.appendChild(imm);
+  }
+}
+
 function renderImmunity(){
   const s=suit();
   const sym=document.getElementById('imm-sym');
   sym.textContent=s.sym;sym.className='imm-sym '+s.cls;
   document.getElementById('imm-text').textContent=t('powers')[s.sym]||'';
+  moveImmunity();
 }
 
 /* ── Boss card (beige card + overflowing image + label on top) ── */

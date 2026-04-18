@@ -121,6 +121,15 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 .cr{color:#7a1a1a}.cb{color:#7a6048}
 
+/* ══ LANDSCAPE: immunity docked to stat panel ══ */
+@media (orientation:landscape){
+  .stat-panel{position:relative}
+  .stat-panel #immunity{
+    position:absolute;bottom:clamp(4px,1vh,14px);
+    left:50%;transform:translateX(-50%);
+    width:90%;justify-content:center;max-width:none}
+}
+
 /* ══ PORTRAIT ══ */
 @media (orientation:portrait){
   /* Grid: boss panel fills top, stats row at bottom */
@@ -215,7 +224,7 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 <div id="main">
 
   <!-- HP -->
-  <div class="stat-panel">
+  <div class="stat-panel" id="hp-panel">
     <button class="btn-chg"
       onmousedown="startHold(()=>changeHP(1),event)" ontouchstart="startHold(()=>changeHP(1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
@@ -246,7 +255,7 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   </div>
 
   <!-- ATK -->
-  <div class="stat-panel">
+  <div class="stat-panel" id="atk-panel">
     <button class="btn-chg"
       onmousedown="startHold(()=>changeATK(1),event)" ontouchstart="startHold(()=>changeATK(1),event)"
       onmouseup="stopHold()" onmouseleave="stopHold()" ontouchend="stopHold()" ontouchcancel="stopHold()">+</button>
