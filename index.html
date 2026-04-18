@@ -124,8 +124,8 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 /* ══ LANDSCAPE: immunity docked to stat panel ══ */
 @media (orientation:landscape){
   .stat-panel{position:relative}
-  /* Clip card image overflow so it doesn't cover suit symbols */
-  #card-zone{overflow:hidden}
+  /* Reduce card height so image (121%) stays within card-zone — no clipping needed */
+  #card-wrap{height:calc(var(--vh)*64)}
   .stat-panel #immunity{
     position:absolute;bottom:clamp(4px,1vh,14px);
     left:50%;transform:translateX(-50%);
