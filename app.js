@@ -10,7 +10,7 @@
   setVH();
 })();
 
-
+const SUITS=[
   {sym:'♣',cls:'cb',code:'C',color:'#2e7d32'},
   {sym:'♦',cls:'cr',code:'D',color:'#e65c00'},
   {sym:'♥',cls:'cr',code:'H',color:'#c0392b'},
