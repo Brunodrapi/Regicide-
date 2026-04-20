@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Regicide</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/favicon.png">
 <style>
 @font-face{font-family:'VikingRunes';src:url('fonts/viking_middle_runes.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:block}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
@@ -15,10 +17,16 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 
 /* ══ LANG BAR ══ */
-#lang-bar{display:flex;gap:4px;justify-content:flex-end;align-items:center;
-  padding:2px 8px 0;flex-shrink:0;position:relative;z-index:1}
-.lang-btn{padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.2);color:rgba(255,255,255,0.55);font-size:9px;
+#lang-bar{display:flex;gap:4px;justify-content:space-between;align-items:center;
+  padding:3px 8px 0;flex-shrink:0;position:relative;z-index:1}
+#logo-block{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+#logo-img{height:clamp(28px,5vh,46px);width:auto;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.7))}
+#logo-credit{font-size:8px;color:rgba(255,255,255,0.5);line-height:1.4;
+  font-family:Georgia,serif;white-space:normal}
+#logo-credit a{color:rgba(255,255,255,0.72);text-decoration:none}
+#lang-btns{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.lang-btn{padding:4px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.2);color:rgba(255,255,255,0.55);font-size:12px;
   font-weight:700;cursor:pointer;letter-spacing:.5px;line-height:1.4;font-family:Georgia,serif}
 .lang-btn.active{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.95);
   border-color:rgba(255,255,255,0.5)}
@@ -29,7 +37,7 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 /* ── Stat panels ── */
 .stat-panel{flex:1.4;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:0;overflow:visible}
+  justify-content:space-evenly;gap:0;overflow:visible;padding:8px 0}
 .icon-hp{color:#aa2020}
 .btn-chg{font-size:min(11vw,calc(var(--vh)*12));font-weight:900;
   color:rgba(255,255,255,0.55);background:none;border:none;cursor:pointer;
@@ -50,16 +58,16 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   align-items:stretch;gap:3px;padding-bottom:clamp(2px,1vh,10px)}
 
 /* Immunity */
-#immunity{display:flex;align-items:center;gap:5px;
-  background:rgba(0,0,0,0.22);border-radius:5px;padding:2px 8px;
+#immunity{display:flex;align-items:center;gap:8px;
+  background:rgba(0,0,0,0.22);border-radius:5px;padding:4px 12px;
   justify-content:center}
-.imm-wrap{position:relative;width:18px;height:18px;display:flex;
+.imm-wrap{position:relative;width:36px;height:36px;display:flex;
   align-items:center;justify-content:center;flex-shrink:0}
-.imm-sym{font-size:15px;line-height:1;opacity:0.35;filter:grayscale(50%)}
+.imm-sym{font-size:30px;line-height:1;opacity:0.35;filter:grayscale(50%)}
 .imm-x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
-.imm-text{font-size:8px;color:rgba(255,255,255,0.72);letter-spacing:.3px;
-  line-height:1.3;max-width:130px}
+  font-size:32px;font-weight:900;color:#e01111;line-height:1;pointer-events:none}
+.imm-text{font-size:16px;color:rgba(255,255,255,0.72);letter-spacing:.3px;
+  line-height:1.3;max-width:none}
 
 /* Card zone — fills all available boss-panel space */
 #card-zone{display:flex;align-items:flex-start;gap:4px;overflow:visible;
@@ -129,10 +137,10 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
     left:50%;transform:translateX(-50%);
     width:90%;justify-content:center;max-width:none;
     padding:5px 12px}
-  .stat-panel .imm-wrap{width:26px;height:26px}
-  .stat-panel .imm-sym{font-size:20px}
-  .stat-panel .imm-x{font-size:20px}
-  .stat-panel .imm-text{font-size:11px;white-space:nowrap}
+  .stat-panel .imm-wrap{width:52px;height:52px}
+  .stat-panel .imm-sym{font-size:40px}
+  .stat-panel .imm-x{font-size:40px}
+  .stat-panel .imm-text{font-size:22px;white-space:nowrap}
 }
 
 /* ══ PORTRAIT ══ */
@@ -158,19 +166,19 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   #kill-btn{position:absolute;bottom:0;left:0;
     width:min(16vw,calc(var(--vh)*9));height:min(16vw,calc(var(--vh)*9))}
 
-  /* Immunity: bigger */
-  #immunity{padding:5px 12px}
-  .imm-wrap{width:26px;height:26px}
-  .imm-sym{font-size:21px}
-  .imm-x{font-size:21px}
-  .imm-text{font-size:11px;max-width:none}
+  /* Immunity: bigger x2 */
+  #immunity{padding:6px 14px}
+  .imm-wrap{width:52px;height:52px}
+  .imm-sym{font-size:42px}
+  .imm-x{font-size:42px}
+  .imm-text{font-size:22px;max-width:none}
 
   /* Suit buttons: larger */
   .suit-btn{width:min(15vw,calc(var(--vh)*12));height:min(15vw,calc(var(--vh)*12));
     font-size:min(11vw,calc(var(--vh)*10))}
 
   /* Lang bar: larger */
-  .lang-btn{font-size:11px;padding:3px 8px}
+  .lang-btn{font-size:14px;padding:5px 12px}
 }
 
 /* ══ OVERLAYS ══ */
@@ -197,12 +205,21 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
 
 <!-- ══ Language bar ══ -->
 <div id="lang-bar">
-  <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
-  <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" data-lang="it" onclick="setLang('it')">IT</button>
-  <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
-  <button class="lang-btn" data-lang="jp" onclick="setLang('jp')">JP</button>
-  <button class="lang-btn" data-lang="cn" onclick="setLang('cn')">CN</button>
+  <div id="logo-block">
+    <img id="logo-img" src="images/logo.png" alt="Regicide" onerror="this.style.display='none'">
+    <div id="logo-credit">
+      Web app développée par un fan, sans lien avec <a href="https://badgersonthemoon.com" target="_blank">Badgers on the Moon</a>.<br>
+      Créée par <a href="https://boardgamegeek.com/user/apiiii" target="_blank">apiiii</a> sur BGG.
+    </div>
+  </div>
+  <div id="lang-btns">
+    <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" data-lang="it" onclick="setLang('it')">IT</button>
+    <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" data-lang="jp" onclick="setLang('jp')">JP</button>
+    <button class="lang-btn" data-lang="cn" onclick="setLang('cn')">CN</button>
+  </div>
 </div>
 
 <!-- ══ Main ══ -->
