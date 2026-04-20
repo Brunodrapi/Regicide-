@@ -14,12 +14,16 @@
 :root{--vh:1vh}
 html,body{width:100%;height:calc(var(--vh)*100);overflow:hidden}
 body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relative;
-  background:url('images/banner.png') center/cover no-repeat fixed;}
+  background:url('images/banner.png') center/cover no-repeat fixed;
+  padding-top:env(safe-area-inset-top);
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right);
+  padding-bottom:env(safe-area-inset-bottom)}
 
 
 /* ══ LANG BAR ══ */
 #lang-bar{display:flex;gap:4px;justify-content:space-between;align-items:center;
-  padding:3px 8px 0;flex-shrink:0;position:relative;z-index:1}
+  padding:6px 12px 0;flex-shrink:0;position:relative;z-index:1}
 #logo-block{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
 #logo-img{height:clamp(28px,5vh,46px);width:auto;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.7))}
 #logo-credit{font-size:8px;color:rgba(255,255,255,0.5);line-height:1.4;
