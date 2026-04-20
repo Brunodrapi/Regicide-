@@ -24,32 +24,38 @@ const LANGS={
     ranks:['Valet','Dame','Roi'],ranks_pl:['Valets','Dames','Rois'],
     powers:{'♣':'Trèfle · Immunité aux dégâts doublés','♦':'Carreau · Immunité à la pioche','♥':'Cœur · Immunité à la guérison','♠':'Pique · Immunité au bouclier'},
     rank_defeated:'⚔ Rang vaincu ! ⚔',next_rank:'Prochain rang',fight:'Au combat !',
-    victory:'Victoire Totale !',all_defeated:'Tous les boss ont été vaincus !',restart:'Recommencer'},
+    victory:'Victoire Totale !',all_defeated:'Tous les boss ont été vaincus !',restart:'Recommencer',
+    fan:'Web app créée par un fan, sans lien avec',createdby:'Créée par',onbgg:'sur BGG'},
   en:{hp:'HP',atk:'ATK',
     ranks:['Jack','Queen','King'],ranks_pl:['Jacks','Queens','Kings'],
     powers:{'♣':'Clubs · Immunity to double damage','♦':'Diamonds · Immunity to drawing','♥':'Hearts · Immunity to healing','♠':'Spades · Immunity to shield'},
     rank_defeated:'⚔ Rank Defeated! ⚔',next_rank:'Next rank',fight:'Fight!',
-    victory:'Total Victory!',all_defeated:'All bosses have been defeated!',restart:'Restart'},
+    victory:'Total Victory!',all_defeated:'All bosses have been defeated!',restart:'Restart',
+    fan:'Fan-made web app, not affiliated with',createdby:'Created by',onbgg:'on BGG'},
   it:{hp:'PV',atk:'ATK',
     ranks:['Fante','Regina','Re'],ranks_pl:['Fanti','Regine','Re'],
     powers:{'♣':'Fiori · Immunità ai danni doppi','♦':'Quadri · Immunità al pescaggio','♥':'Cuori · Immunità alla guarigione','♠':'Picche · Immunità allo scudo'},
     rank_defeated:'⚔ Grado sconfitto! ⚔',next_rank:'Prossimo grado',fight:'Al combattimento!',
-    victory:'Vittoria Totale!',all_defeated:'Tutti i boss sono stati sconfitti!',restart:'Ricominciare'},
+    victory:'Vittoria Totale!',all_defeated:'Tutti i boss sono stati sconfitti!',restart:'Ricominciare',
+    fan:'App fan, non affiliata a',createdby:'Creata da',onbgg:'su BGG'},
   de:{hp:'LP',atk:'ATK',
     ranks:['Bube','Dame','König'],ranks_pl:['Buben','Damen','Könige'],
     powers:{'♣':'Kreuz · Immunität gegen doppelten Schaden','♦':'Karo · Immunität gegen Ziehen','♥':'Herz · Immunität gegen Heilung','♠':'Pik · Immunität gegen Schild'},
     rank_defeated:'⚔ Rang besiegt! ⚔',next_rank:'Nächster Rang',fight:'Zum Kampf!',
-    victory:'Totaler Sieg!',all_defeated:'Alle Bosse wurden besiegt!',restart:'Neustart'},
+    victory:'Totaler Sieg!',all_defeated:'Alle Bosse wurden besiegt!',restart:'Neustart',
+    fan:'Fan-App, nicht verbunden mit',createdby:'Erstellt von',onbgg:'auf BGG'},
   jp:{hp:'HP',atk:'ATK',
     ranks:['ジャック','クイーン','キング'],ranks_pl:['ジャック','クイーン','キング'],
     powers:{'♣':'クラブ · 2倍ダメージ無効','♦':'ダイヤ · ドロー無効','♥':'ハート · 回復無効','♠':'スペード · シールド無効'},
     rank_defeated:'⚔ ランク撃破！ ⚔',next_rank:'次のランク',fight:'戦闘へ！',
-    victory:'完全勝利！',all_defeated:'全ボスを倒した！',restart:'もう一度'},
+    victory:'完全勝利！',all_defeated:'全ボスを倒した！',restart:'もう一度',
+    fan:'非公式ファンアプリ・無関係：',createdby:'制作',onbgg:'BGG'},
   cn:{hp:'HP',atk:'攻击',
     ranks:['J','Q','K'],ranks_pl:['J','Q','K'],
     powers:{'♣':'梅花 · 免疫双倍伤害','♦':'方块 · 免疫抽牌','♥':'红心 · 免疫治疗','♠':'黑桃 · 免疫护盾'},
     rank_defeated:'⚔ 等级击败！ ⚔',next_rank:'下一等级',fight:'战斗！',
-    victory:'完全胜利！',all_defeated:'所有Boss已被击败！',restart:'重新开始'},
+    victory:'完全胜利！',all_defeated:'所有Boss已被击败！',restart:'重新开始',
+    fan:'粉丝制作，与以下无关：',createdby:'创建者',onbgg:'BGG'},
 };
 
 let currentLang='fr';
@@ -74,6 +80,9 @@ function updateLangUI(){
   document.getElementById('ov-win-title').textContent=t('victory');
   document.getElementById('ov-win-sub').textContent=t('all_defeated');
   document.getElementById('ov-restart-btn').textContent=t('restart');
+  const lf=document.getElementById('lbl-fan');if(lf)lf.textContent=t('fan');
+  const lc=document.getElementById('lbl-createdby');if(lc)lc.textContent=t('createdby');
+  const lb=document.getElementById('lbl-onbgg');if(lb)lb.textContent=t('onbgg');
 }
 
 /* ── State ── */
