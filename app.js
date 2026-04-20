@@ -58,7 +58,7 @@ const LANGS={
     fan:'粉丝制作，与以下无关：',createdby:'创建者',onbgg:'BGG'},
 };
 
-let currentLang='fr';
+let currentLang='en';
 function t(key){return LANGS[currentLang][key];}
 function rankName(idx){return t('ranks')[idx];}
 function rankNamePl(idx){return t('ranks_pl')[idx];}
