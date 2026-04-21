@@ -204,6 +204,15 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
   font-size:14px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;
   text-transform:uppercase;letter-spacing:2px}
 .trophy{font-size:50px;line-height:1}
+
+/* ══ STYLE BAR ══ */
+#style-bar{display:flex;gap:4px;justify-content:center;align-items:center;
+  padding:3px 8px;flex-shrink:0;position:relative;z-index:1}
+.style-btn{padding:4px 12px;border-radius:4px;border:1px solid rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.2);color:rgba(255,255,255,0.55);font-size:12px;
+  font-weight:700;cursor:pointer;letter-spacing:.5px;line-height:1.4;font-family:Georgia,serif}
+.style-btn.active{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.95);
+  border-color:rgba(255,255,255,0.5)}
 </style>
 </head>
 <body>
@@ -226,6 +235,13 @@ body{display:flex;flex-direction:column;font-family:Georgia,serif;position:relat
     <button class="lang-btn" data-lang="jp" onclick="setLang('jp')">JP</button>
     <button class="lang-btn" data-lang="cn" onclick="setLang('cn')">CN</button>
   </div>
+</div>
+
+<!-- ══ Style bar ══ -->
+<div id="style-bar">
+  <button class="style-btn active" data-style="human" onclick="setStyle('human')" id="style-human"></button>
+  <button class="style-btn" data-style="corgi" onclick="setStyle('corgi')" id="style-corgi"></button>
+  <button class="style-btn" data-style="none" onclick="setStyle('none')" id="style-none"></button>
 </div>
 
 <!-- ══ Main ══ -->
